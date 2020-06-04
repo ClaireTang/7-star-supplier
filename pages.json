@@ -1,0 +1,100 @@
+{
+	"pages": [
+		{
+			"path": "pages/order/index/index",
+			"style": {
+				"navigationBarTitleText": "订单"
+			}
+		},
+		{
+			"path": "pages/receipt/index/index",
+			"style": {
+				"navigationBarTitleText": "收款单" 
+			}
+		},
+		{
+			"path": "pages/goods/index/index",
+			"style": {
+				"navigationBarTitleText": "商品"
+			}
+		},
+		{
+			"path": "pages/mine/index/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/login/index/index",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/login/register/index",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		},
+		{
+			"path": "pages/mine/auth/index",
+			"style": {
+				"navigationBarTitleText": "商家认证",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
+		},{
+            "path" : "pages/dd/dd",
+            "style" : {}
+        }
+        
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "七星订货",
+		"navigationBarBackgroundColor": "#ffffff",
+		"backgroundColor": "#FFFFFF"
+	},
+	"tabBar": {
+	    "color": "#7A7E83",
+	    "selectedColor": "#0099ff",
+	    "backgroundColor": "#ffffff",
+	    "list": [
+			{
+				"pagePath": "pages/order/index/index",
+				"iconPath": "static/image/order.png",
+				"selectedIconPath": "static/image/order-focus.png",
+				"text": "订单"
+			},
+			{
+				"pagePath": "pages/receipt/index/index",
+				"iconPath": "static/image/receipt.png",
+				"selectedIconPath": "static/image/receipt-focus.png",
+				"text": "收款单"
+			},
+			{
+				"pagePath": "pages/goods/index/index",
+				"iconPath": "static/image/goods.png",
+				"selectedIconPath": "static/image/goods-focus.png",
+				"text": "商品"
+			},
+			{
+				"pagePath": "pages/mine/index/index",
+				"iconPath": "static/image/mine.png",
+				"selectedIconPath": "static/image/mine-focus.png",
+				"text": "我的"
+			}
+		]
+	},
+	"condition": {
+	  //模式配置，仅开发期间生效
+	  "current": 0, //当前激活的模式(list 的索引项)
+	  "list": [
+	    {
+	      "name": "", //模式名称
+	      "path": "", //启动页面，必选
+	      "query": "" //启动参数，在页面的onLoad函数里面得到
+	    }
+	  ]
+	}
+}
