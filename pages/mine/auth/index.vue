@@ -325,9 +325,7 @@
 				);
 			},
 			sure(e) {
-				console.log(e)
 				this.isChoose = true
-				console.log(this.multiIndex)
 			},
 		}
 	}

@@ -22,7 +22,7 @@
 				</navigator>
 			</template>
 		</view>
-		<view class="wrap">
+		<view class="wrap first">
 			<uni-list>
 				<uni-list-item title="修改手机号" thumb="/static/image/fix-tel.png" @click="fixTel"></uni-list-item>
 				<uni-list-item title="修改密码" thumb="/static/image/fix-pwd.png" @click="fixPwd"></uni-list-item>
@@ -190,8 +190,11 @@ export default {
 		border-radius: 50%;
 	}
 	.wrap {
-		margin: -30upx 20upx 20upx;
+		margin: 20upx;
 		box-shadow: $eee 0px 0px 10px 3px;
+	}
+	.first {
+		margin-top: -30upx;
 	}
 	
 </style>

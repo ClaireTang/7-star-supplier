@@ -15,7 +15,9 @@
 		{
 			"path": "pages/goods/index/index",
 			"style": {
-				"navigationBarTitleText": "商品"
+				"navigationBarTitleText": "商品",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
 			}
 		},
 		{
@@ -43,11 +45,7 @@
 				"navigationBarBackgroundColor": "#0099ff",
 				"navigationBarTextStyle": "white"
 			}
-		},{
-            "path" : "pages/dd/dd",
-            "style" : {}
-        }
-        
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
