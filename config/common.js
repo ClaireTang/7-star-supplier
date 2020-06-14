@@ -15,6 +15,25 @@ function deepCopy(newobj, obj) {
 	return newobj
 }
 
+//旧key到新key的映射
+// var keyMap = {
+// 	"id" : "value",
+// 	"name" : "label"
+// };
+//改变数组中对象的key
+function changeKey(array,keyMap) {
+	for(var i = 0;i < array.length;i++){
+		var obj = array[i];
+		for(var key in obj){
+			var newKey = keyMap[key];
+			if(newKey && newKey != key){
+				obj[newKey] = obj[key];
+				delete obj[key];
+			}
+		}
+	}
+	console.log(array)
+}
 //跳转到登陆页面
 function jumpToLogin(method) {
 	var now_time = Date.parse(new Date())
@@ -479,6 +498,7 @@ function shareParameterDecode(url) {
 
 export {
 	deepCopy,
+	changeKey,
 	jumpToLogin,
 	timeToDate,
 	formatMoney,

@@ -6,7 +6,14 @@ import * as db from './db.js' //引入db
 // 需要登陆的，都写到这里，否则就是不需要登陆的接口
 const urlList = [
 	'user/userInfo',
-	'commercial/merchantsCertification'
+	'commercial/merchantsCertification',
+	'goods/goodsCategory',
+	'goods/goodsType',
+	'goods/goodsSpecRel',
+	'goods/goodsInsert',
+	'goods/goodsList',
+	'goods/goodsDetail',
+	'goods/goodsDel'
 ];
 
 const post = (url, data, callback,complete) => {
@@ -59,7 +66,7 @@ const post = (url, data, callback,complete) => {
 								uni.hideToast();
 								// #ifdef H5 || APP-PLUS || APP-PLUS-NVUE
 								uni.navigateTo({
-									url: '/pages/login/login/index'
+									url: '/pages/login/index/index'
 								})
 								// #endif
 								// #ifdef MP-WEIXIN || MP-ALIPAY || MP-TOUTIAO
@@ -361,8 +368,7 @@ export const uploadImage = (num, callback) => {
 	});
 }
 
-// 获取店铺配置
-export const shopConfig = (callback) => get(apiBaseUrl + 'api/common/jshopconf', callback);
+
 
 // 用户注册
 export const reg = (data, callback) => post('login/getRegister', data, callback);
@@ -373,23 +379,61 @@ export const login = (data, callback) => post('login/login', data, callback);
 // 用户信息
 export const userInfo = (data, callback) => post('user/userInfo', data, callback);
 
-// 上传头像
-export const changeAvatar = (data, callback) => post('user.changeavatar', data, callback);
-
 // 编辑商户认证信息
 export const editBusinessInfo = (data, callback, complete) => post('commercial/merchantsCertification', data, callback, complete);
 
-// 编辑用户信息
-export const editInfo = (data, callback, complete) => post('user.editinfo', data, callback, complete);
+
 
 // 发送短信验证码
 export const sms = (data, callback) => post('login/getCode', data, callback);
 
-// 短信验证码登录
-export const smsLogin = (data, callback) => post('user.smslogin', data, callback);
+
 
 // 退出登录
 export const logout = (data, callback) => post('user.logout', data, callback);
+
+// 获取商品分类
+export const categories = (data, callback) => post('goods/goodsCategory', data, callback);
+
+// 获取商品类型
+export const typegories = (data, callback) => post('goods/goodsType', data, callback);
+
+// 获取类型对应的商品规格属性
+export const specRel = (data, callback) => post('goods/goodsSpecRel', data, callback);
+
+// 上传商品
+export const goodsInsert = (data, callback) => post('goods/goodsInsert', data, callback);
+
+//商品列表
+export const goodsList = (data, callback) => post('goods/goodsList', data, callback);
+
+// 获取商品详情
+export const goodsDetail = (data, callback) => post('goods/goodsDetail', data, callback);
+
+// 删除商品
+export const goodsDel = (data, callback) => post('goods/goodsDel', data, callback);
+
+
+
+
+
+
+
+
+
+
+
+// 编辑用户信息
+export const editInfo = (data, callback, complete) => post('user.editinfo', data, callback, complete);
+
+// 获取店铺配置
+export const shopConfig = (callback) => get(apiBaseUrl + 'api/common/jshopconf', callback);
+
+// 上传头像
+export const changeAvatar = (data, callback) => post('user.changeavatar', data, callback);
+
+// 短信验证码登录
+export const smsLogin = (data, callback) => post('user.smslogin', data, callback);
 
 // 获取首页幻灯片
 export const slider = (data, callback) => post('advert.getAdvertList', data, callback);
@@ -409,14 +453,13 @@ export const articleInfo = (data, callback) => post('articles.getArticleDetail',
 // 获取文章列表
 export const articleList = (data, callback) => post('articles.getArticleList', data, callback);
 
-// 获取商品分类
-export const categories = (data, callback) => post('categories.getallcat', data, callback);
+
 
 // 获取商品列表
-export const goodsList = (data, callback) => post('goods.getlist', data, callback);
+// export const goodsList = (data, callback) => post('goods.getlist', data, callback);
 
-// 获取商品详情
-export const goodsDetail = (data, callback) => post('goods.getdetial', data, callback);
+// // 获取商品详情
+// export const goodsDetail = (data, callback) => post('goods.getdetial', data, callback);
 
 // 获取商品参数信息
 export const goodsParams = (data, callback) => post('goods.getgoodsparams', data, callback);

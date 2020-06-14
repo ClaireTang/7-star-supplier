@@ -11,6 +11,15 @@
 .space-between {
 	justify-content: space-between;	
 }
+.flex-wrap {
+	flex-wrap: wrap;
+}
 .text-center {
 	text-align: center;
+}
+.btn-block {
+	font-size: 28upx;
+	transform: scale(1);
+	transition: all .5s;
+	margin-top: 20upx;
 }

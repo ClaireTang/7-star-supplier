@@ -17,7 +17,22 @@
 			"style": {
 				"navigationBarTitleText": "商品",
 				"navigationBarBackgroundColor": "#0099ff",
-				"navigationBarTextStyle": "white"
+				"navigationBarTextStyle": "white",
+				"app-plus": {  
+					"titleNView": {   
+						"buttons": [{  
+							"text": "\ue61f",
+							"fontSrc": "/static/iconfont.ttf",
+							"fontSize": "20px"
+						}]
+					}
+				} 
+			}
+		},
+		{
+			"path": "pages/goods/index/create",
+			"style": {
+				"navigationBarTitleText": ""
 			}
 		},
 		{

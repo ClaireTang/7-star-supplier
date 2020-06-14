@@ -37,7 +37,7 @@
 					<view class="text-color-grey fsz24">照片清晰,不超过2M</view>
 				</view>
 				<view class="form-image">
-					<view class="goods-img-item" v-for="(item, key) in business_license_images" :key="key">
+					<view class="img-item" v-for="(item, key) in business_license_images" :key="key">
 						<image class="del" src="/static/image/del.png" mode="" @click="delImage(item,business_license_images)"></image>
 						<image class="" :src="item.url" mode="" @click="clickImg(item.url)"></image>
 					</view>
@@ -53,7 +53,7 @@
 					<view class="text-color-grey fsz24">照片清晰,不超过2M</view>
 				</view>
 				<view class="form-image">
-					<view class="goods-img-item" v-for="(item, key) in food_trade_permit_images" :key="key">
+					<view class="img-item" v-for="(item, key) in food_trade_permit_images" :key="key">
 						<image class="del" src="/static/image/del.png" mode="" @click="delImage(item,food_trade_permit_images)"></image>
 						<image class="" :src="item.url" mode="" @click="clickImg(item.url)"></image>
 					</view>
@@ -69,7 +69,7 @@
 					<view class="text-color-grey fsz24">照片清晰,不超过2M</view>
 				</view>
 				<view class="form-image">
-					<view class="goods-img-item" v-for="(item, key) in logo_images" :key="key">
+					<view class="img-item" v-for="(item, key) in logo_images" :key="key">
 						<image class="del" src="/static/image/del.png" mode="" @click="delImage(item,logo_images)"></image>
 						<image class="" :src="item.url" mode="" @click="clickImg(item.url)"></image>
 					</view>
@@ -90,8 +90,6 @@
 </template>
 
 <script>
-
-
 	export default {
 		data() {
 			return {
@@ -119,8 +117,6 @@
 				multiArray: [],
 				submitStatus: false,
 			}
-		},
-		components: {
 		},
 		computed: {
 			isImage() {
@@ -311,18 +307,20 @@
 				this.form.business_license = this.returnId(this.business_license_images)
 				this.form.food_trade_permit = this.returnId(this.food_trade_permit_images)
 				this.form.logo = this.returnId(this.logo_images)
-				this.checkData(this.form)
-				this.$api.editBusinessInfo(this.form, res => {
-						this.$common.successToShow('提交成功', result => {
-							this.submitStatus = false;
-							uni.navigateBack({
-								delta: 1
+				if(this.checkData(this.form)){
+					this.$api.editBusinessInfo(this.form, res => {
+							this.$common.successToShow('提交成功', result => {
+								this.submitStatus = false;
+								uni.navigateBack({
+									delta: 1
+								});
 							});
-						});
-					},res => {
-						this.submitStatus = false;
-					}
-				);
+						},res => {
+							this.submitStatus = false;
+						}
+					);
+				}
+				
 			},
 			sure(e) {
 				this.isChoose = true
@@ -375,17 +373,17 @@
 		display: inline-block;
 		padding: 24upx 0;
 	}
-	.goods-img-item{
+	.img-item{
 		width: 166upx;
 		height: 166upx;
 		padding: 10upx;
 		float: left;
 		position: relative;
 	}
-	.goods-img-item:nth-child(4n){
+	.img-item:nth-child(4n){
 		margin-right: 0;
 	}
-	.goods-img-item image{
+	.img-item image{
 		width: 100%;
 		height: 100%;
 	}
@@ -404,11 +402,7 @@
 		width: 100%;
 		z-index: 66;
 	}
-	.btn-block {
-		font-size: 28upx;
-		transform: scale(1);
-		transition: all .5s;
-	}
+	
 	.agreement {
 		padding: 20upx;
 	}
