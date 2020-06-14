@@ -426,7 +426,7 @@
 					  this.transform(data, result, path, level + 1)
 					} else {
 					  result.push({
-						spes_desc: path.join('，'),
+						spes_desc: path.join(','),
 						is_defalut: `${+!result.length}`,
 						price:"",
 						costprice:"",
