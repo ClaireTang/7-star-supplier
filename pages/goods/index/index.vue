@@ -39,9 +39,9 @@
 						<text>全选</text>
 					</view>
 				</view>
-				<view class="del" @click="arrDel()">删除</view>
+				<view class="red" @click="arrDel()">删除</view>
 				<!-- #ifdef MP-WEIXIN -->
-					<navigator class="add" url="/page/goods/index/create">
+					<navigator class="blue" url="/page/goods/index/create">
 						新增
 					</navigator>
 				<!-- #endif -->
@@ -118,7 +118,8 @@
 			inp(index) { //商品选择
 				for (var i = 0; i < this.list.length; i++) {
 					if (this.list[i].id == index) {
-						this.list[i].check = !this.list[i].check;
+						// this.list[i].check = !this.list[i].check;
+						this.$set(this.list[i],'check',!this.list[i].check)
 						if (this.list[i].check == false) {	  		 //如果有条数据没选择，就取消全选
 							this.flag = false;
 							this.num -= 1;
@@ -131,7 +132,6 @@
 						this.$emit("refresh",this.list);
 					}
 				}
-				
 			},
 			removeM(id) { //商品删除
 				var _this = this;
@@ -164,7 +164,7 @@
 					}
 				}
 			},
-			all(index) { //全选
+			all() { //全选
 				this.flag = !this.flag;
 				if (this.flag) {
 					for (var i = 0; i < this.list.length; i++) {
@@ -268,53 +268,5 @@
 			margin-right: 20upx;
 		}
 	}
-	/* 底部样式 */
-	.allBox {
-		width: 100%;
-		height: 98upx;
-		position: fixed;
-		bottom: var(--window-bottom);
-		left: 0upx;
-		display: flex;
-		z-index: 201;
-		border: 1upx solid $eee;
-	}
-	.allBox image {
-		width: 44upx;
-		height: 44upx;
-		margin-right:12upx;
-		vertical-align: middle;
-		margin-top: -8upx;
-	}
-	.allBox>view:nth-of-type(1) {
-		flex-grow: 1;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		font-size: 32upx;
-		font-weight: 300;
-		color: rgba(20, 23, 30, 1);
-		padding: 0upx 46upx 0upx 42upx;
-		background: white;
-	}
-	.allBox>.del {
-		width: 25%;
-		height: 100%;
-		line-height: 98upx;
-		text-align: center;
-		color: white;
-		font-size: 32upx;
-		font-weight: bold;
-		background: #ff0900;
-	}
-	.allBox>.add {
-		width: 25%;
-		height: 100%;
-		line-height: 98upx;
-		text-align: center;
-		color: white;
-		font-size: 32upx;
-		font-weight: bold;
-		background: #0099ff;
-	}
+	
 </style>

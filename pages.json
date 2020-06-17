@@ -7,6 +7,12 @@
 			}
 		},
 		{
+			"path": "pages/order/index/detail",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
+		},
+		{
 			"path": "pages/receipt/index/index",
 			"style": {
 				"navigationBarTitleText": "收款单" 

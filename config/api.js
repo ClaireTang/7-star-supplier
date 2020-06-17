@@ -24,6 +24,7 @@ const post = (url, data, callback,complete) => {
 	let header = {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json',
+		// 	// 'Content-Type': 'application/x-www-form-urlencoded', //自定义请求头信息
 	}
 	// 判断token是否存在
 	if (urlList.indexOf(url) >= 0) {
@@ -43,11 +44,6 @@ const post = (url, data, callback,complete) => {
 	uni.request({
 		url: apiBaseUrl + `merapi/${url}`,
 		data: data,
-		// header: {
-		// 	'Accept': 'application/json',
-		// 	'Content-Type': 'application/json',
-		// 	// 'Content-Type': 'application/x-www-form-urlencoded', //自定义请求头信息
-		// },
 		header: header,
 		method: 'POST',
 		success: (response) => {
