@@ -7,15 +7,15 @@
 			}
 		},
 		{
-			"path": "pages/order/index/detail",
+			"path": "pages/order/receipt/index",
 			"style": {
-				"navigationBarTitleText": "订单详情"
+				"navigationBarTitleText": "收款单" 
 			}
 		},
 		{
-			"path": "pages/receipt/index/index",
+			"path": "pages/order/detail/detail",
 			"style": {
-				"navigationBarTitleText": "收款单" 
+				"navigationBarTitleText": "订单详情"
 			}
 		},
 		{
@@ -86,7 +86,7 @@
 				"text": "订单"
 			},
 			{
-				"pagePath": "pages/receipt/index/index",
+				"pagePath": "pages/order/receipt/index",
 				"iconPath": "static/image/receipt.png",
 				"selectedIconPath": "static/image/receipt-focus.png",
 				"text": "收款单"

@@ -1,9 +1,8 @@
 <template>
 	<view class="goods">
 		<xw-empty :isShow="emptyShow" text="暂无相关商品数据" textColor="#777777"></xw-empty>
-		<navigator url="/pages/goods/index/creat" v-if="emptyShow">
-			<button type="primary" plain="true" class="fz12 creat-goods" >创建商品</button>
-		</navigator>
+		<!-- type="primary" plain="true" -->
+		<button class="fz12 creat-goods" hover-class="none" v-if="emptyShow" @click="creatGo">创建商品</button>
 		<template v-if="!emptyShow">
 			<uni-swipe-action >
 			    <uni-swipe-action-item v-for="(obj, key) in list" :key="key" :options="options" @click="swipeClick($event,key,obj)">
@@ -90,9 +89,7 @@
 			this.getList(this.page_num)
 		},
 		onNavigationBarButtonTap(e) {
-			uni.navigateTo({
-				url: '/pages/goods/index/create'
-			})
+			this.creatGo()
 		},
 		onReachBottom() {
 			if(this.status == 'more') {
@@ -232,6 +229,15 @@
 						this.$common.successToShow("删除成功")
 					})
 				}
+			},
+			creatGo() {
+				if(this.$store.state.audiStatus) {
+					uni.navigateTo({
+						url: '/pages/goods/index/create'
+					})
+				} else {
+					this.$common.errorToShow('请等待认证通过')
+				}
 			}
 		}
 	}
@@ -241,10 +247,13 @@
 	@import '~@/static/css/common.scss';
 	.goods {
 		padding-bottom: 100upx;
+		.creat-goods {
+			width: 200upx;
+			color: $theme-color;
+			border: 2upx solid $theme-color;
+		}
 	}
-	.creat-goods {
-		width: 200upx;
-	}
+	// .goods 
 	.contWrap {
 		flex: 1;
 		padding: 20upx;

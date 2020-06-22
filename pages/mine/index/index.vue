@@ -24,18 +24,18 @@
 		</view>
 		<view class="wrap first">
 			<uni-list>
-				<uni-list-item title="修改手机号" thumb="/static/image/fix-tel.png" @click="fixTel"></uni-list-item>
-				<uni-list-item title="修改密码" thumb="/static/image/fix-pwd.png" @click="fixPwd"></uni-list-item>
+				<!-- <uni-list-item title="修改手机号" thumb="/static/image/fix-tel.png" @click="fixTel"></uni-list-item>
+				<uni-list-item title="修改密码" thumb="/static/image/fix-pwd.png" @click="fixPwd"></uni-list-item> -->
 			</uni-list>
 		</view>
 		<view class="wrap">
 			<uni-list >
-				<uni-list-item title="商家认证" thumb="/static/image/renzheng.png" @click="goAuth"></uni-list-item>
+				<!-- <uni-list-item title="商家认证" thumb="/static/image/renzheng.png" @click="goAuth"></uni-list-item> -->
+				<uni-list-item title="商家信息" thumb="/static/image/renzheng.png" note="联系平台修改信息"  :show-arrow="false"></uni-list-item>
 				<!-- <uni-list-item title="清除缓存" thumb="/static/image/clear-cache.png" @click="clearCache"></uni-list-item> -->
 				<uni-list-item title="退出" thumb="/static/image/exit.png" v-if="hasLogin" @click="logOff"></uni-list-item>
 			</uni-list>
 		</view>
-		 
 	</view>
 </template>
 
@@ -70,6 +70,7 @@ export default {
 				this.$api.userInfo({}, res => {
 					if (res.state) {
 						_this.businessInfo = res.data
+						_this.$store.commit('audiStatus',res.data.state)
 					}
 				})
 			} else {

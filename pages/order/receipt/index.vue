@@ -10,7 +10,8 @@
 				{{item.text}}
 			</view>
 		</view>
-		<swiper :current="tabCurrentIndex" :class="tabCurrentIndex === 0 ? 'wait-delivered swiper-box' : 'swiper-box'" duration="300" @change="changeTab">   
+		<!-- tabItem.loaded === true && tabItem.orderList.length === 0 -->
+		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">   
 			<swiper-item class="tab-content" v-for="(tabItem,tabIndex) in navList" :key="tabIndex">
 				<xw-empty :isShow="tabItem.loaded === true && tabItem.orderList.length === 0" text="暂无相关订单数据" textColor="#777777"></xw-empty>
 				<scroll-view class="list-scroll-content" scroll-y @scrolltolower="scrolltolower">
@@ -20,15 +21,13 @@
 							<button class="mini-btn" type="primary" plain="true" size="mini" @click="copy(obj.order_id)">复制</button>
 						</view>
 						<view class="flex space-between bottom" @click="goDetail(obj)">
-							<view class="circleBox" @click.stop="inp(obj.order_id)" v-if="tabCurrentIndex===0">
-								<image :src="`/static/bbh-shopCar/icon/${obj.check ? 'circleCacheef' : 'circleCachee'}.png`" class="circle"></image>
-							</view>
 							<view class="middle">
 								<view class="content">
 									<text class="text-color-grey">状态：</text>
-									<text class="blue">【{{formatPayStatus(obj.pay_status)}}】</text> 
-									<text class="red" v-if="obj.confirm === 2">【{{formatConfirmStatus(obj.confirm)}}】</text>
-									<text class="red" v-else>【{{formatShipStatus(obj.ship_status)}}】</text> 
+									<text class="blue">【{{formatPayStatus(obj.pay_status)}}】</text>
+									<text v-if="obj.confirm === 2">【{{formatConfirmStatus(obj.confirm)}}】</text>
+									<text class="red" v-else>【{{formatShipStatus(obj.ship_status)}}】</text>
+									<text v-if="obj.pay_status===2">【{{obj.is_right ? '已开票' : '未开票'}}】</text>
 								</view>
 								<view class="content"><text class="text-color-grey">商品种类：</text>{{obj.goods_type_num}}</view>
 								<view class="content"><text class="text-color-grey">下单时间：</text>{{$common.timeToDate(obj.utime)}}</view>
@@ -41,19 +40,6 @@
 						<uni-load-more :status="tabItem.loadingType"  :icon-size="16" />
 					</template>
 				</scroll-view>
-				<view class="allBox" v-if="tabCurrentIndex === 0 && tabItem.orderList.length > 0">
-					<view>
-						<view @click="all()">
-							<image :src="`/static/bbh-shopCar/icon/${flag ? 'circleCacheef' : 'circleCachee'}.png`"></image>
-							<text>全选</text>
-						</view>
-					</view>
-					<view class="red" @click="cancelOrder(tabItem.orderList)">驳回</view>
-					<view class="blue" @click="deliver(tabItem.orderList)">发货</view>
-				</view>
-				<neil-modal :show="show" @close="closeModal" title="请输入驳回原因" @cancel="bindBtn('cancel')" @confirm="bindBtn('confirm',tabItem.orderList)">
-				    <textarea placeholder="原因" style="box-sizing:border-box;padding: 20px;height: 100px;width: 100%;overflow: hidden;" v-model="cause"/>
-				</neil-modal>
 			</swiper-item>
 		</swiper>
 	</view>
@@ -65,65 +51,51 @@
 	export default {
 		data() {
 			return {
-				// items: ['待发货','已发货','未付款','全部'],
 				tabCurrentIndex: 0,
 				navList: [{
 						state: 0,
-						text: '待发货',
-						loadingType: 'noMore',
-						orderList: []
+						text: '未付款',
+						loadingType: 'more',
+						orderList: [],
+						isShow: false
 					},
 					{
 						state: 1,
-						text: '已发货',
-						loadingType: 'noMore',
-						orderList: []
-					},
-					/* {
-						state: 2,
-						text: '未付款',
-						loadingType: 'noMore',
-						orderList: []
-					},
-					{
-						state: 3,
-						text: '已收款',
+						text: '已付款',
 						loadingType: 'more',
-						orderList: []
-					}, */
-					{
-						state: 2,
-						text: '全部',
-						loadingType: 'more',
-						orderList: []
+						orderList: [],
+						isShow: false
 					}
+					// {
+					// 	state: 2,
+					// 	text: '全部',
+					// 	loadingType: 'more',
+					// 	orderList: []
+					// },
 				],
-				page: 1,
-				last_page: 1,
-				flag  : false,				//判断是否全选
-				num   : 0,                  //修改数据后，用来判断是否全选
-				show  : false,
-				cause : ''
+				wait_page: 1,
+				wait_last_page: 1,
+				has_page: 1,
+				has_last_page: 1,
 			}
 		},
 		onLoad(options){
+			// 待付款
+			let params = {pay_status: 1,page:this.wait_page}
+			this.loadData('', params)
 			/**
 			 * 修复app端点击除全部订单外的按钮进入时不加载数据的问题
 			 * 替换onLoad下代码即可
 			 */
 			// // #ifndef MP
-			// this.loadData()
+			// this.loadData('', params)
 			// // #endif
 			// // #ifdef MP
 			// console.log(options,'oooooo')
 			// if(options.state == 0){
-			// 	this.loadData()
+			// 	this.loadData('', params)
 			// }
 			// // #endif
-			
-			// 待发货
-			let params = {ship_status: 1}
-			this.loadData('', params)
 		},
 		onShow() {
 			if(uni.getStorageSync("to")) {
@@ -133,13 +105,13 @@
 				        console.log('success');
 				    }
 				});
-				let params = {ship_status: 1}
+				let params = {pay_status: 1,page:this.wait_page}
 				this.loadData('', params)
 			}
 		},
 		methods: {
 			//获取订单列表
-			loadData(source,params){
+			loadData(source,params,type){
 				//这里是将订单挂载到tab列表下
 				let index = this.tabCurrentIndex;
 				let navItem = this.navList[index];
@@ -148,28 +120,35 @@
 					//tab切换只有第一次需要加载数据
 					return false;
 				}
-				if(index === 2) {
-					if(navItem.loadingType === 'loading'){
-						//防止重复加载
-						return;
-					}
-					navItem.loadingType = 'loading';
+				if(navItem.loadingType === 'loading'){
+					//防止重复加载
+					return;
 				}
+				navItem.loadingType = 'loading';
+				
 				this.$api.allOrderList(params, res => {
 					let result = res.data
-					if(this.tabCurrentIndex === 2) {
-						this.last_page = result.last_page
-						result.data.forEach(item=>{
-							navItem.orderList.push(item);
-						})
+					result.data.forEach(item=>{
+						navItem.orderList.push(item);
+					})
+					if(params.pay_status === 1) {
+						this.wait_last_page = result.last_page
 						//判断是否还有数据， 有改为 more， 没有改为noMore
-						navItem.loadingType = (result.current_page === this.last_page) ? 'noMore' : 'more';
-						if(result.current_page <= this.last_page) this.page++
-					}else{
-						this.$set(navItem,'orderList',result)
+						navItem.loadingType = (result.current_page === this.wait_last_page) ? 'noMore' : 'more';
+						//页面自增
+						if(result.current_page <= this.wait_last_page) this.wait_page++
+					}else if(params.pay_status === 2) {
+						this.has_last_page = result.last_page
+						navItem.loadingType = (result.current_page === this.has_last_page) ? 'noMore' : 'more';
+						if(result.current_page <= this.has_last_page) this.has_page++
 					}
 					//loaded新字段用于表示数据加载完毕，如果为空可以显示空白页
 					this.$set(navItem, 'loaded', true);
+					
+					// if(navItem.loaded === true && navItem.orderList.length === 0 ) {
+					// 	this.$set(navItem, 'isShow', true);
+					// }
+					// console.log(navItem,'navItem')
 				})
 			}, 
 			//顶部tab点击
@@ -182,74 +161,37 @@
 				let params = {}
 				switch (this.tabCurrentIndex) {
 					case 0:
-						params = {ship_status: 1}
+						params = {pay_status: 1,page:this.wait_page}
 						this.loadData('tabChange',params)
 						break;
 					case 1:
-						params = {ship_status: 3,confirm: 1,}
+						params = {pay_status: 2,page:this.has_page}
 						this.loadData('tabChange',params)
 						break;
 					// case 2:
-					// 	params = {pay_status : 1}
+					// 	params = {page: this.wait_page}
 					// 	this.loadData('tabChange',params)
 					// 	break;
-					// case 3:
-					// 	params = {pay_status : 2}
-					// 	this.loadData('tabChange',params)
-					// 	break;
-					case 2:
-						params = Object.assign({},{page: this.page})
-						this.loadData('tabChange',params)
-						break;
 					default:
 						break;
 				}
 			},
 			//滚动到底
 			scrolltolower() {
-				if(this.tabCurrentIndex !== 2) {
-					return
-				}else{
-					if(this.page <= this.last_page) {
-						let params = Object.assign({},{page: this.page})
+				if(this.tabCurrentIndex === 0) {
+					if(this.wait_page <= this.wait_last_page) {
+						let params ={pay_status: 1,page:this.wait_page}
 						this.loadData('',params)
 					}
-				}
-			},
-			//订单选择check
-			inp(index,data) { 
-				let orderList = this.navList[this.tabCurrentIndex].orderList
-				for (var i = 0; i < orderList.length; i++) {
-					if (orderList[i].order_id == index) {
-						this.$set(orderList[i],'check',!orderList[i].check)
-						if (orderList[i].check == false) {	  		 //如果有条数据没选择，就取消全选
-							this.flag = false;
-							this.num -= 1;
-						} else {
-							this.num += 1;
-							if (this.num == orderList.length) {		//如果全部选中了
-								this.flag = true;
-							}
-						}
+				}else if(this.tabCurrentIndex === 1) {
+					if(this.has_page <= this.has_last_page) {
+						let params ={pay_status: 1,page:this.has_page}
+						this.loadData('',params)
 					}
+				}else{
+					
 				}
 				
-			},
-			//全选
-			all() { 
-				let orderList = this.navList[this.tabCurrentIndex].orderList
-				this.flag = !this.flag;
-				if (this.flag) {
-					for (var i = 0; i < orderList.length; i++) {
-						orderList[i].check = true;
-					}
-					this.num = orderList.length;
-				} else {
-					for (var i = 0; i < orderList.length; i++) {
-						orderList[i].check = false;
-					}
-					this.num = 0;
-				}
 			},
 			//复制订单号
 			copy(value){
@@ -272,58 +214,6 @@
 					url: '/pages/order/detail/detail?order_id=' + obj.order_id
 				})
 				
-			},
-			//提交前整理数据
-			makeOrderIds(list) {
-				let order_ids = []
-				list.forEach((item,key) => {
-					if(item.check ) order_ids.push(item.order_id)
-				})
-				if(order_ids.length === 0) {
-					this.$common.errorToShow('请选择订单！')
-				}
-				return order_ids
-			},
-			//发货
-			deliver(list) {
-				let order_ids = this.makeOrderIds(list)
-				if(order_ids.length > 0) {
-					this.useDeliverApi({order_ids:order_ids})
-				}
-			},
-			//调用发货接口
-			useDeliverApi(data) {
-				this.$api.shipments(data, res => {
-					let params = {ship_status: 1}
-					this.loadData('',params)
-				})
-			},
-			//驳回
-			cancelOrder(list) {
-				let order_ids = this.makeOrderIds(list)
-				if(order_ids.length > 0) {
-					this.show = true
-				}
-			},
-			//关闭驳回弹框
-			closeModal(type) {
-			    this.show = false
-			},
-			//点击驳回弹框按钮
-			bindBtn(type,list) {
-				if(type==='confirm') {
-					let order_ids = this.makeOrderIds(list)
-					this.useTurnDownApi({order_ids:order_ids,cause:this.cause})
-				} else {
-					this.$common.errorToShow('已取消驳回')
-				}
-			},
-			//调用驳回接口
-			useTurnDownApi(data) {
-				this.$api.turnDown(data, res => {
-					let params = {ship_status: 1}
-					this.loadData('',params)
-				})
 			},
 			//格式化支付状态
 			formatPayStatus(value) {

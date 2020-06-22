@@ -31,6 +31,19 @@
 				<view class="form-title">详细地址</view>
 				<input class="form-item-input" type="text" v-model="form.addre_detail"/>
 			</view>
+			<view class="flex form-item">
+				<view class="form-title">打款周期</view>
+				<!-- <view class="uni-list"> -->
+					<radio-group @change="radioChange" class="flex">
+						<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in cycleList" :key="item.value">
+							<view>
+								<radio :value="item.value" :checked="index === current" color="#FFCC33"/>
+							</view>
+							<view>{{item.name}}</view>
+						</label>
+					</radio-group>
+				<!-- </view> -->
+			</view>
 			<view class="flex space-between align-items-top form-item-other">
 				<view class="form-title">
 					<view>商户营业执照</view>
@@ -111,11 +124,29 @@
 					address: 0,
 					addre_detail: '',
 					bank_mobile: '',
+					day: '30'
 				},
+				current: 2,
 				isChoose: false,
 				multiIndex: [0, 0, 0],
 				multiArray: [],
 				submitStatus: false,
+				//打款周期列表
+				cycleList: [
+					{
+						value: '7',
+						name: '7',
+					},
+					{
+						value: '15',
+						name: '15',
+					},
+					{
+						value: '30',
+						name: '30',
+						checked: true
+					},
+				]
 			}
 		},
 		computed: {
@@ -307,12 +338,14 @@
 				this.form.business_license = this.returnId(this.business_license_images)
 				this.form.food_trade_permit = this.returnId(this.food_trade_permit_images)
 				this.form.logo = this.returnId(this.logo_images)
+				//处理打款周期
+				this.form.day = this.cycleList[this.current].value
 				if(this.checkData(this.form)){
 					this.$api.editBusinessInfo(this.form, res => {
 							this.$common.successToShow('提交成功', result => {
 								this.submitStatus = false;
 								uni.navigateBack({
-									delta: 1
+									delta: 2
 								});
 							});
 						},res => {
@@ -325,6 +358,17 @@
 			sure(e) {
 				this.isChoose = true
 			},
+			radioChange: function(evt) {
+				for (let i = 0; i < this.cycleList.length; i++) {
+					if (this.cycleList[i].value === evt.target.value) {
+						this.current = i;
+						this.cycleList[i].checked = true
+						break;
+					} else {
+						this.cycleList[i].checked = false
+					}
+				}
+			}
 		}
 	}
 </script>
@@ -414,5 +458,30 @@
 		.arrowright {
 			padding-top: 6upx;
 		}
+	}
+	.uni-list {
+	    background-color: #fff;
+	    position: relative;
+	    width: 100%;
+	    display: flex;
+	    // -webkit-box-orient: vertical;
+	    flex-direction: column;
+	}
+	.uni-list-cell {
+	    position: relative;
+	    display: flex;
+	    flex-direction: row;
+	    justify-content: space-between;
+	    align-items: center;
+	}
+	.uni-list-cell {
+		justify-content: flex-start
+	}
+	.uni-list-cell-pd {
+	    padding: 11px 15px;
+	}
+	/deep/ .auth .uni-radio-input.uni-radio-input-checked {
+		background-color: #0099ff !important;
+		border-color: #0099ff !important;
 	}
 </style>

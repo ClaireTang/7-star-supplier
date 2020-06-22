@@ -13,7 +13,12 @@ const urlList = [
 	'goods/goodsInsert',
 	'goods/goodsList',
 	'goods/goodsDetail',
-	'goods/goodsDel'
+	'goods/goodsDel',
+	'orders/orderList',
+	'orders/orderDetail',
+	'orders/shipments',
+	'orders/turnDown',
+	'orders/openTax'
 ];
 
 const post = (url, data, callback,complete) => {
@@ -409,6 +414,24 @@ export const goodsDetail = (data, callback) => post('goods/goodsDetail', data, c
 // 删除商品
 export const goodsDel = (data, callback) => post('goods/goodsDel', data, callback);
 
+// 订单列表
+export const allOrderList = (data, callback) => post('orders/orderList', data, callback);
+
+// 订单详情
+export const allOrderDetail = (data, callback) => post('orders/orderDetail', data, callback);
+
+// 订单发货
+export const shipments = (data, callback) => post('orders/shipments', data, callback);
+
+// 订单驳回
+export const turnDown = (data, callback) => post('orders/turnDown', data, callback);
+
+//是否开发票，改变状态
+export const openTax = (data, callback) => post('orders/openTax', data, callback);
+
+//取下级地址列表
+export const getAreaList = (data, callback) => post('area/getAddress', data, callback);
+
 
 
 
@@ -703,8 +726,7 @@ export const login2 = (data, callback) => post('user.wxapplogin2', data, callbac
 //支付宝小程序解析code
 export const alilogin1 = (data, callback) => post('user.alipayapplogin1', data, callback);
 
-//取下级地址列表
-export const getAreaList = (data, callback) => post('area/getAddress', data, callback);
+
 
 //取搜索页推荐关键字
 export const getRecommendKeys = (callback) => post('store.getrecommendkeys', {}, callback);
