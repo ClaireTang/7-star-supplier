@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="reg-t"><image class="reg-logo" :src="logoImage" mode="aspectFill"></image></view>
+		<!-- <view class="reg-t"><image class="reg-logo" :src="logoImage" mode="aspectFill"></image></view> -->
 		<view class="reg-m">
 			<view class="reg-item">
 				<input type="number" v-model="mobile" :maxlength="maxMobile" placeholder="请输入手机号码" focus placeholder-class="login-item-i-p fsz26" />
@@ -83,7 +83,8 @@ export default {
 			}
 		},
 		logoImage() {
-			return this.$store.state.config.shop_logo;
+			// return this.$store.state.config.shop_logo;
+			return '@/static/image/logo2.png'
 		}
 	},
 	onShow() {
@@ -209,7 +210,7 @@ export default {
 	background-color: #f8f8f8;
 }
 .reg-m {
-	margin-bottom: 100upx;
+	margin: 100upx 0;
 }
 .reg-item {
 	border-bottom: 2upx solid #d0d0d0;
