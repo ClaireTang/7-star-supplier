@@ -138,14 +138,14 @@ export default {
 		padding: 0upx 100upx;
 	}
 	.form  {
-		margin: 0upx auto;
-		padding: 50upx 0;
-		
+		margin: 100upx 0;
 	}
 	.form-item {
-		padding: 0 10upx 10upx;
-		border-bottom: 2upx solid #999;
-		margin: 10upx 0 0;
+		border-bottom: 2upx solid #d0d0d0;
+		overflow: hidden;
+		padding: 10upx;
+		color: #333;
+		margin-bottom: 30upx;
 	}
 	.bottom {
 		margin-top: 100upx;
