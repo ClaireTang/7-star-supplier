@@ -7,7 +7,7 @@ const store = new Vuex.Store({
 	state: {
 		// config: {}, // 店铺配置信息
 		// orderTab: 0, // 选中的订单tab页
-		// redirectPage: '',
+		redirectPage: '',
 		// uuid:'',//当前客户端
 		// searchStyle: '',
 		// searchFixed:false,//搜索框样式
@@ -25,9 +25,9 @@ const store = new Vuex.Store({
 		// orderTab (state, tab) {
 		// 	state.orderTab = tab
 		// },
-		// redirect (state, payload) {
-		// 	state.redirectPage = payload.page
-		// },
+		redirect (state, payload) {
+			state.redirectPage = payload.page
+		},
 		// searchStyle (state, style) {
 		// 	state.searchStyle = style
 		// },

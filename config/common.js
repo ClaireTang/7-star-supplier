@@ -54,15 +54,7 @@ function jumpToLogin(method) {
 			if (page.goodsId) {
 				pagePath = '/' + page.route + '?id=' + page.goodsId;
 			} else {
-				pagePath = '/pages/index/index';
-			}
-		}
-		if (page.route.indexOf('pages/goods/index/group') !== -1) {
-			//团购秒杀详情页
-			if (page.goodsId && page.groupId) {
-				pagePath = '/' + page.route + '?id=' + page.goodsId + '&group_id' + page.groupId;
-			} else {
-				pagePath = '/pages/index/index';
+				pagePath = '/pages/mine/index/index';
 			}
 		}
 		// #endif
@@ -73,15 +65,7 @@ function jumpToLogin(method) {
 			if (page.data.goodsId) {
 				pagePath = '/' + page.__proto__.route + '?id=' + page.data.goodsId;
 			} else {
-				pagePath = '/pages/index/index';
-			}
-		}
-		if (page.__proto__.route.indexOf('pages/goods/index/group') !== -1) {
-			//团购秒杀详情页
-			if (page.data.goodsId && page.data.groupId) {
-				pagePath = '/' + page.__proto__.route + '?id=' + page.data.goodsId + '&group_id' + page.data.groupId;
-			} else {
-				pagePath = '/pages/index/index';
+				pagePath = '/pages/mine/index/index';
 			}
 		}
 		// #endif

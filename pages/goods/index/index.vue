@@ -1,11 +1,10 @@
 <template>
 	<view class="goods">
 		<xw-empty :isShow="emptyShow" text="暂无相关商品数据" textColor="#777777"></xw-empty>
-		<!-- type="primary" plain="true" -->
 		<button class="fz12 creat-goods" hover-class="none" v-if="emptyShow" @click="creatGo">创建商品</button>
 		<template v-if="!emptyShow">
-			<uni-swipe-action >
-			    <uni-swipe-action-item v-for="(obj, key) in list" :key="key" :options="options" @click="swipeClick($event,key,obj)">
+			<uni-swipe-action>
+				<uni-swipe-action-item v-for="(obj, key) in list" :key="key" :options="options" @click="swipeClick($event,key,obj)">
 					<view class="flex contWrap">
 						<view class="circleBox" @click.stop="inp(obj.id)">
 							<image :src="`/static/bbh-shopCar/icon/${obj.check ? 'circleCacheef' : 'circleCachee'}.png`" class="circle"></image>
@@ -28,9 +27,9 @@
 							</view> -->
 						</view>
 					</view>
-			    </uni-swipe-action-item>
+				</uni-swipe-action-item>
 			</uni-swipe-action>
-			<uni-load-more :status="status"  :icon-size="16" />
+			<uni-load-more :status="status" :icon-size="16" />
 			<view class="allBox">
 				<view>
 					<view @click="all()">
@@ -40,12 +39,27 @@
 				</view>
 				<view class="red" @click="arrDel()">删除</view>
 				<!-- #ifdef MP-WEIXIN -->
-					<navigator class="blue" url="/page/goods/index/create">
-						新增
-					</navigator>
+				<navigator class="blue" url="/page/goods/index/create">
+					新增
+				</navigator>
 				<!-- #endif -->
 			</view>
 		</template>
+		<view :class="showSider ? 'mark in' : 'mark'" @click="showSider=false"></view>
+		<view :class="showSider ? 'sider in' : 'sider'">
+			<view class="text-center fsz28">筛选</view>
+			<view class="form">
+				<view class="form-item">
+					<view class="form-title">商品名称</view>
+					<input class="form-item-input" type="text" placeholder="名称" v-model="form.name"/>
+				</view>
+				<view class="flex uni-btn-v">
+					<button type="default" class="btn-block" @click="reset" size="mini">重置</button>
+					<button type="primary" class="btn-block" @click="search" size="mini">查询</button>
+				</view>
+			</view>
+		</view>
+
 	</view>
 </template>
 
@@ -53,23 +67,25 @@
 	export default {
 		data() {
 			return {
+				showSider: false,
+				form: {
+					name: ''
+				},
 				list: [],
-				emptyShow: false ,//true显示，false隐藏
-				options:[
-					{
-						text: '编辑',
-						style: {
-							backgroundColor: '#0099ff',
-						}
-					}, {
-						text: '删除',
-						style: {
-							backgroundColor: '#ff0900'
-						}
+				emptyShow: false, //true显示，false隐藏
+				options: [{
+					text: '编辑',
+					style: {
+						backgroundColor: '#0099ff',
 					}
-				],
-				flag  : false,				//判断是否全选
-				num   : 0,                  //删除数据后，用来判断是否全选
+				}, {
+					text: '删除',
+					style: {
+						backgroundColor: '#ff0900'
+					}
+				}],
+				flag: false, //判断是否全选
+				num: 0, //删除数据后，用来判断是否全选
 				status: 'more',
 				page_num: 1,
 				total_num: ""
@@ -87,27 +103,35 @@
 			this.flag = false
 			this.num = 0
 			this.getList(this.page_num)
+
 		},
+		onReady() {},
 		onNavigationBarButtonTap(e) {
-			this.creatGo()
+			if (e.index === 1) {
+				this.creatGo()
+			} else if (e.index === 0) {
+				this.showSider = !this.showSider
+			}
 		},
 		onReachBottom() {
-			if(this.status == 'more') {
-				this.page_num ++;
+			if (this.status == 'more') {
+				this.page_num++;
 				this.getList(this.page_num);
 			}
 		},
 		methods: {
 			getList(num) {
 				this.status = 'loading';
-				this.$api.goodsList({page:num}, res => {
+				this.$api.goodsList({
+					page: num
+				}, res => {
 					this.total_num = res.data.last_page
 					let newData = res.data.data
-					newData.forEach((item,key) => {
-						this.$set(item,'check',false)
+					newData.forEach((item, key) => {
+						this.$set(item, 'check', false)
 					})
 					this.list = this.list.concat(newData)
-					
+
 					this.status = this.total_num == this.page_num ? 'noMore' : 'more'
 					this.list.length > 0 ? this.emptyShow = false : this.emptyShow = true
 				})
@@ -116,23 +140,23 @@
 				for (var i = 0; i < this.list.length; i++) {
 					if (this.list[i].id == index) {
 						// this.list[i].check = !this.list[i].check;
-						this.$set(this.list[i],'check',!this.list[i].check)
-						if (this.list[i].check == false) {	  		 //如果有条数据没选择，就取消全选
+						this.$set(this.list[i], 'check', !this.list[i].check)
+						if (this.list[i].check == false) { //如果有条数据没选择，就取消全选
 							this.flag = false;
 							this.num -= 1;
 						} else {
 							this.num += 1;
-							if (this.num == this.list.length) {		//如果全部选中了
+							if (this.num == this.list.length) { //如果全部选中了
 								this.flag = true;
 							}
 						}
-						this.$emit("refresh",this.list);
+						this.$emit("refresh", this.list);
 					}
 				}
 			},
 			removeM(id) { //商品删除
 				var _this = this;
-				for(var i = 0; i < this.list.length; i++) {
+				for (var i = 0; i < this.list.length; i++) {
 					var obj = this.list[i];
 					if (obj.id == id) {
 						uni.showModal({
@@ -142,12 +166,12 @@
 							success: function(res) {
 								if (res.confirm) {
 									_this.list.splice(i, 1);
-									_this.$emit("refresh",_this.list);
-									if (obj.check) {			//如果选中状态下删除
+									_this.$emit("refresh", _this.list);
+									if (obj.check) { //如果选中状态下删除
 										_this.num--;
 										_this.total();
 									}
-									if (_this.num == 0) {		//删除后还需要判断下当前的num是否跟当前的数据长度相同，是否显示全选
+									if (_this.num == 0) { //删除后还需要判断下当前的num是否跟当前的数据长度相同，是否显示全选
 										_this.flag = false;
 									} else {
 										if (_this.num == _this.list.length) {
@@ -174,9 +198,9 @@
 					}
 					this.num = 0;
 				}
-				this.$emit("refresh",this.list);
+				this.$emit("refresh", this.list);
 			},
-			swipeClick(e,index,obj) {
+			swipeClick(e, index, obj) {
 				let {
 					content
 				} = e
@@ -206,38 +230,48 @@
 			},
 			arrDel() {
 				let data = []
-				this.list.forEach((item,key) => {
-					if(item.check) data.push(item.id)
+				this.list.forEach((item, key) => {
+					if (item.check) data.push(item.id)
 				})
-				console.log(data,'data')
+				console.log(data, 'data')
 				this.toDelGoods(data)
 			},
 			toDelGoods(data) {
-				if(data.length === 0) {
+				if (data.length === 0) {
 					this.$common.errorToShow('请选择商品')
 					return false
-				}else{
-					this.$api.goodsDel({id:data}, res => {
+				} else {
+					this.$api.goodsDel({
+						id: data
+					}, res => {
 						//刷新页面
 						this.list = []
 						this.page_num = 1
 						this.total_num = ''
 						this.status = "more"
 						this.flag = false
-						this.num = 0						this.getList(this.page_num)
-						
+						this.num = 0
+						this.getList(this.page_num)
+
 						this.$common.successToShow("删除成功")
 					})
 				}
 			},
 			creatGo() {
-				if(this.$store.state.audiStatus) {
+				console.log(this.$store.state.audiStatus)
+				if (this.$store.state.audiStatus) {
 					uni.navigateTo({
 						url: '/pages/goods/index/create'
 					})
 				} else {
 					this.$common.errorToShow('请等待认证通过')
 				}
+			},
+			search() {
+				this.showSider = false
+			},
+			reset() {
+				this.form.name = ''
 			}
 		}
 	}
@@ -245,14 +279,17 @@
 
 <style lang="scss" scoped>
 	@import '~@/static/css/common.scss';
+
 	.goods {
 		padding-bottom: 100upx;
+
 		.creat-goods {
 			width: 200upx;
 			color: $theme-color;
 			border: 2upx solid $theme-color;
 		}
 	}
+
 	// .goods 
 	.contWrap {
 		flex: 1;
@@ -260,22 +297,63 @@
 		font-size: 28upx;
 		border-bottom: 2upx solid $eee;
 	}
+
 	/* input选项 */
-	.circleBox{
+	.circleBox {
 		padding: 0 60upx 0 20upx;
 	}
-	.circle{
+
+	.circle {
 		width: 48upx;
-		height:48upx;
-	} 
+		height: 48upx;
+	}
+
 	/* 主体内容 */
-	.goodBox{
+	.goodBox {
 		flex: 1 1 auto;
+
 		image {
 			width: 100upx;
-			height:100upx;
+			height: 100upx;
 			margin-right: 20upx;
 		}
 	}
-	
+
+	.mark {
+		transition: all 0.4s ease;
+		left: 100%;
+		top: 44px;
+		position: fixed;
+		background: #9c9a9a;
+		width: 100%;
+		height: calc(100% - 44px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom));
+		z-index: 202;
+
+		&.in {
+			left: 0;
+		}
+
+	}
+
+	.sider {
+		transition: all 0.4s ease;
+		padding: 20upx;
+		left: 100%;
+		top: 44px;
+		position: fixed;
+		background: #fff;
+		width: 70%;
+		height: calc(100% - 44px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom));
+		z-index: 202;
+
+		&.in {
+			left: 30%;
+		}
+	}
+	.form-item-input {
+		padding: 10upx 20upx;
+		margin-top: 10upx;
+		border: 2upx solid $eee;
+		font-size: $fz12;
+	}
 </style>

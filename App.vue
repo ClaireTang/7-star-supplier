@@ -23,6 +23,19 @@ export default {
 	},
 	onShow: function() {
 		console.log('App Show');
+		// 获取用户token
+		let userToken = this.$db.get("userToken");
+		if (!userToken) {
+			// this.$common.jumpToLogin();
+			// return false;
+		} else {
+			this.$api.userInfo({}, res => {
+				if (res.state) {
+					this.$store.commit('audiStatus',res.data.state)
+					console.log(this.$store.state.audiStatus,'onAppShow')
+				}
+			})
+		}
 	},
 	onHide: function() {
 		console.log('App Hide');

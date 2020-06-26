@@ -26,10 +26,16 @@
 				"navigationBarTextStyle": "white",
 				"app-plus": {  
 					"titleNView": {   
-						"buttons": [{  
-							"text": "\ue61f",
+						"buttons": [{
+							"text": "\ue627",
 							"fontSrc": "/static/iconfont.ttf",
-							"fontSize": "20px"
+							"fontSize": "20px",
+							"width": "30px"
+						},{  
+							"text": "\ue729",
+							"fontSrc": "/static/iconfont.ttf",
+							"fontSize": "20px",
+							"width": "30px"
 						}]
 					}
 				} 
