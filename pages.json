@@ -28,12 +28,12 @@
 					"titleNView": {   
 						"buttons": [{
 							"text": "\ue627",
-							"fontSrc": "/static/iconfont.ttf",
+							"fontSrc": "/static/iconfont/iconfont.ttf",
 							"fontSize": "20px",
 							"width": "30px"
 						},{  
 							"text": "\ue729",
-							"fontSrc": "/static/iconfont.ttf",
+							"fontSrc": "/static/iconfont/iconfont.ttf",
 							"fontSize": "20px",
 							"width": "30px"
 						}]
@@ -51,6 +51,24 @@
 			"path": "pages/mine/index/index",
 			"style": {
 				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/mine/tel/index",
+			"style": {
+				"navigationBarTitleText": "修改手机号"
+			}
+		},
+		{
+			"path": "pages/mine/pwd/index",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
+		},
+		{
+			"path": "pages/login/resetPwd/index",
+			"style": {
+				"navigationBarTitleText": "重置密码"
 			}
 		},
 		{

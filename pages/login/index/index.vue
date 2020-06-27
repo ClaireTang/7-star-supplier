@@ -2,10 +2,10 @@
 	<view class="content">
 		<view class="form">
 			<view class="form-item">
-				<input class="form-item-input" type="number" v-model="mobile" :maxlength="11" placeholder="请输入手机号码" placeholder-class="login-item-i-p fsz26">
+				<input class="form-item-input" type="number" v-model="mobile" :maxlength="11" placeholder="请输入手机号码" placeholder-class="fsz26">
 			</view>
 			<view class="form-item">
-				<input class="form-item-input" :password="true" type="text" v-model="password" placeholder="请输入登录密码" placeholder-class="login-item-i-p fsz26">
+				<input class="form-item-input" :password="true" type="text" v-model="password" placeholder="请输入登录密码" placeholder-class="fsz26">
 			</view>
 			<view class="goforgetpwd color-9 fsz24" @click="goForgetpwd"> 忘记密码 </view>
 			<view class="bottom">
@@ -44,7 +44,9 @@ export default {
 	},
 	methods: {
 		goForgetpwd() {
-			
+			uni.navigateTo({
+				url: '/pages/login/resetPwd/index'
+			})
 		},
 		rightMobile() {
 			let res = {};
@@ -89,7 +91,7 @@ export default {
 			
 			this.$api.login(data, res => {
 				console.log(res)
-				if (res.state) {
+				if (res.state > 0) {
 					this.$db.set('userToken', res.data.login_token);
 					this.redirectHandler();
 				} else {
@@ -128,43 +130,6 @@ export default {
 </script>
 
 <style>
-	.content {
-		/*  #ifdef  H5  */
-		height: calc(100vh - 90upx);
-		/*  #endif  */
-		/*  #ifndef  H5  */
-		height: 100vh;
-		/*  #endif  */
-		padding: 0upx 100upx;
-	}
-	.form  {
-		margin: 100upx 0;
-	}
-	.form-item {
-		border-bottom: 2upx solid #d0d0d0;
-		overflow: hidden;
-		padding: 10upx;
-		color: #333;
-		margin-bottom: 30upx;
-	}
-	.bottom {
-		margin-top: 100upx;
-	}
-	.bottom .btn {
-		color: #999;
-	}
-	.btn-blue {
-		color: #fff !important;
-	}
-	.goforgetpwd {
-		width: 100%;
-		text-align: right;
-		padding: 10upx 0;
-	}
-	.agreement {
-		padding: 10upx 0;
-	}
-	.regist {
-		text-align: right;
-	}
+	@import '~@/static/css/form.scss';
+	
 </style>

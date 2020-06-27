@@ -1,0 +1,103 @@
+@import '~@/static/css/common.scss';
+	.content {
+		/*  #ifdef  H5  */
+		height: calc(100vh - 90upx);
+		/*  #endif  */
+		/*  #ifndef  H5  */
+		height: 100vh;
+		/*  #endif  */
+		padding: 0upx 100upx;
+	}
+	.form  {
+		padding: 100upx 0;
+	}
+	.form-item {
+		border-bottom: 2upx solid #d0d0d0;
+		overflow: hidden;
+		padding: 10upx;
+		color: #333;
+		margin-bottom: 30upx;
+		.btn {
+			border: none;
+			width: 40%;
+			text-align: right;
+		}
+	}
+	.bottom {
+		margin-top: 100upx;
+	}
+	.bottom .btn {
+		color: #999;
+	}
+	.btn-blue {
+		color: #fff !important;
+	}
+	
+	
+	
+	.reg-t {
+		text-align: center;
+		padding: 50upx 0;
+	}
+	.reg-logo {
+		width: 180upx;
+		height: 180upx;
+		border-radius: 20upx;
+		background-color: #f8f8f8;
+	}
+	.reg-m {
+		margin: 100upx 0;
+	}
+	.reg-item {
+		border-bottom: 2upx solid #d0d0d0;
+		overflow: hidden;
+		padding: 10upx;
+		color: #333;
+		margin-bottom: 30upx;
+		.btn {
+			border: none;
+			width: 40%;
+			text-align: right;
+			&.btn-blue {
+				background: none;
+				color: #333 !important;
+			}
+		}
+	}
+	.reg-item-input {
+		flex: 1;
+	}
+	
+	.registered-item {
+		overflow: hidden;
+		width: 100%;
+	}
+	.registered {
+		float: right;
+	}
+	.btn-square {
+		color: #333;
+		height: 80upx;
+		line-height: 80upx;
+		padding: 0;
+		// font-size: $fz12;
+	}
+	
+	.agreement {
+		margin: 20rpx 0;
+		text-align: center;
+	}
+	.agreement .color-o {
+		margin: 0 10upx;
+	}
+	.goforgetpwd {
+		width: 100%;
+		text-align: right;
+		padding: 10upx 0;
+	}
+	.agreement {
+		padding: 10upx 0;
+	}
+	.regist {
+		text-align: right;
+	}

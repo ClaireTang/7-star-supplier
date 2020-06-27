@@ -18,7 +18,9 @@ const urlList = [
 	'orders/orderDetail',
 	'orders/shipments',
 	'orders/turnDown',
-	'orders/openTax'
+	'orders/openTax',
+	'commercial/editMobile',
+	'commercial/editPassword'
 ];
 
 const post = (url, data, callback,complete) => {
@@ -432,9 +434,14 @@ export const openTax = (data, callback) => post('orders/openTax', data, callback
 //取下级地址列表
 export const getAreaList = (data, callback) => post('area/getAddress', data, callback);
 
+// 修改手机号
+export const fixTel = (data, callback) => post('commercial/editMobile', data, callback);
 
+// 修改密码
+export const fixPwd = (data, callback) => post('commercial/editPassword', data, callback);
 
-
+// 忘记密码
+export const resetPwd = (data, callback) => post('login/forgetPassword', data, callback);
 
 
 

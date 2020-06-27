@@ -3,15 +3,15 @@
 		<!-- <view class="reg-t"><image class="reg-logo" :src="logoImage" mode="aspectFill"></image></view> -->
 		<view class="reg-m">
 			<view class="reg-item">
-				<input type="number" v-model="mobile" :maxlength="maxMobile" placeholder="请输入手机号码" focus placeholder-class="login-item-i-p fsz26" />
+				<input type="number" v-model="mobile" :maxlength="maxMobile" placeholder="请输入手机号码" focus placeholder-class="fsz26" />
 			</view>
 			<view class="reg-item flc">
-				<input class="reg-item-input" placeholder-class="login-item-i-p fsz26" type="text" v-model="code" placeholder="请输入验证码" />
+				<input class="reg-item-input" placeholder-class="fsz26" type="text" v-model="code" placeholder="请输入验证码" />
 				<view :class="sendCodeBtn" @click="sendCode" v-if="verification">发送验证码</view>
 				<view class="btn btn-g" v-if="!verification">{{ timer }} 秒后重新获取</view>
 			</view>
 			<view class="reg-item">
-				<input class="login-item-input" :password="true" placeholder-class="login-item-i-p fsz26" type="text" v-model="password" placeholder="请输入密码" />
+				<input class="login-item-input" :password="true" placeholder-class="fsz26" type="text" v-model="password" placeholder="请输入密码" />
 			</view>
 		</view>
 		<view class="bottom">
@@ -111,7 +111,7 @@ export default {
 				this.$common.loadToShow('发送中...');
 				setTimeout(() => {
 					this.$common.loadToHide();
-					this.$api.sms({ mobile: this.mobile }, res => {
+					this.$api.sms({ mobile: this.mobile, state: 0 }, res => {
 						if (res.state == "200") {
 							this.timer = 60;
 							this.verification = false;
@@ -188,79 +188,5 @@ export default {
 </script>
 
 <style lang="scss">
-.content {
-	/*  #ifdef  H5  */
-	height: calc(100vh - 90upx);
-	/*  #endif  */
-	/*  #ifndef  H5  */
-	height: 100vh;
-	/*  #endif  */
-	background-color: #fff;
-
-	padding: 0upx 100upx;
-}
-.reg-t {
-	text-align: center;
-	padding: 50upx 0;
-}
-.reg-logo {
-	width: 180upx;
-	height: 180upx;
-	border-radius: 20upx;
-	background-color: #f8f8f8;
-}
-.reg-m {
-	margin: 100upx 0;
-}
-.reg-item {
-	border-bottom: 2upx solid #d0d0d0;
-	overflow: hidden;
-	padding: 10upx;
-	color: #333;
-	margin-bottom: 30upx;
-	.btn {
-		border: none;
-		width: 40%;
-		text-align: right;
-		&.btn-blue {
-			background: none;
-			color: #333 !important;
-		}
-	}
-}
-.reg-item-input {
-	flex: 1;
-}
-
-.bottom {
-	margin-top: 100upx;
-}
-.bottom .btn {
-	color: #999;
-}
-.btn-blue {
-		color: #fff !important;
-	}
-.registered-item {
-	overflow: hidden;
-	width: 100%;
-}
-.registered {
-	float: right;
-}
-.btn-square {
-	color: #333;
-	height: 80upx;
-	line-height: 80upx;
-	padding: 0;
-	// font-size: $fz12;
-}
-
-.agreement {
-	margin: 20rpx 0;
-	text-align: center;
-	.color-o {
-		margin: 0 10rpx;
-	}
-}
+@import '~@/static/css/form.scss';
 </style>

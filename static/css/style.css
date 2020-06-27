@@ -215,10 +215,11 @@ uni-toast .uni-toast {
 
 .btn-square {
 	padding: 0upx 40upx;
-	height: 90upx;
-	line-height: 90upx;
+	/* height: 90upx;
+	line-height: 90upx; */
 	min-width: 150upx;
 	border: none !important;
+	border-radius: 10upx;
 }
 
 .btn-fillet {

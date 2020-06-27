@@ -24,8 +24,8 @@
 		</view>
 		<view class="wrap first">
 			<uni-list>
-				<!-- <uni-list-item title="修改手机号" thumb="/static/image/fix-tel.png" @click="fixTel"></uni-list-item>
-				<uni-list-item title="修改密码" thumb="/static/image/fix-pwd.png" @click="fixPwd"></uni-list-item> -->
+				<uni-list-item title="修改手机号" thumb="/static/image/fix-tel.png" @click="fixTel"></uni-list-item>
+				<uni-list-item title="修改密码" thumb="/static/image/fix-pwd.png" @click="fixPwd"></uni-list-item>
 			</uni-list>
 		</view>
 		<view class="wrap">
@@ -131,9 +131,15 @@ export default {
 		},
 		fixTel() {
 			this.judgeHasLogin()
+			uni.navigateTo({
+				url: '/pages/mine/tel/index'
+			})
 		},
 		fixPwd() {
 			this.judgeHasLogin()
+			uni.navigateTo({
+				url: '/pages/mine/pwd/index'
+			})
 		},
 		judgeHasLogin () {
 			if(!this.hasLogin){
@@ -156,7 +162,7 @@ export default {
 		// 退出登录
 		logOff() {
 		  this.$common.modelShow('退出', '确认退出登录吗?', () => {
-		    this.$db.del('userToken')
+		    this.$db.clear()
 		    uni.reLaunch({
 		      url: '/pages/mine/index/index'
 		    })
