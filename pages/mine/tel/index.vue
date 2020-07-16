@@ -59,13 +59,13 @@
 		},
 		onShow() {
 			let _this = this;
-			let userToken = _this.$db.get('userToken');
-			if (userToken && userToken != '') {
-				uni.switchTab({
-					url: '/pages/mine/index/index'
-				});
-				return true;
-			}
+			// let userToken = _this.$db.get('userToken');
+			// if (userToken && userToken != '') {
+			// 	uni.switchTab({
+			// 		url: '/pages/mine/index/index'
+			// 	});
+			// 	return true;
+			// }
 			_this.timer = parseInt(_this.$db.get('timer_fix_tel'));
 			if (_this.timer != null && _this.timer > 0) {
 				_this.countDown();
