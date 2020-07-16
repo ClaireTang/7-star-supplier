@@ -31,12 +31,15 @@
 							"fontSrc": "/static/iconfont/iconfont.ttf",
 							"fontSize": "20px",
 							"width": "30px"
-						},{  
-							"text": "\ue729",
-							"fontSrc": "/static/iconfont/iconfont.ttf",
-							"fontSize": "20px",
-							"width": "30px"
-						}]
+						}
+						//过滤条件暂未联调接口
+						// {  
+						// 	"text": "\ue729",
+						// 	"fontSrc": "/static/iconfont/iconfont.ttf",
+						// 	"fontSize": "20px",
+						// 	"width": "30px"
+						// },
+						]
 					}
 				} 
 			}
