@@ -133,10 +133,10 @@
 				submitStatus: false,
 				//打款周期列表
 				cycleList: [
-					{
-						value: '7',
-						name: '7',
-					},
+					// {
+					// 	value: '7',
+					// 	name: '7',
+					// },
 					{
 						value: '15',
 						name: '15',
