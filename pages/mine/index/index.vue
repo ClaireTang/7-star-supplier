@@ -30,8 +30,8 @@
 		</view>
 		<view class="wrap">
 			<uni-list >
-				<!-- <uni-list-item title="商家认证" thumb="/static/image/renzheng.png" @click="goAuth"></uni-list-item> -->
-				<uni-list-item title="商家信息" thumb="/static/image/renzheng.png" note="联系平台修改信息"  :show-arrow="false"></uni-list-item>
+				<uni-list-item title="商家信息" thumb="/static/image/renzheng.png" @click="goAuth" v-if="businessInfo.state-0 === 0"></uni-list-item>
+				<uni-list-item title="商家信息" thumb="/static/image/renzheng.png" note="联系平台修改信息"  :show-arrow="false" v-if="businessInfo.state-0 !== 0"></uni-list-item>
 				<!-- <uni-list-item title="清除缓存" thumb="/static/image/clear-cache.png" @click="clearCache"></uni-list-item> -->
 				<uni-list-item title="退出" thumb="/static/image/exit.png" v-if="hasLogin" @click="logOff"></uni-list-item>
 			</uni-list>

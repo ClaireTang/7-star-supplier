@@ -190,6 +190,8 @@
 					if(res.data.logo) {
 						this.logo_images.push(res.data.logo)
 					}
+					this.form.day = res.data.receipt || 30
+					this.giveReceiptValue()
 				}	
 			})
 		},
@@ -361,6 +363,17 @@
 			radioChange: function(evt) {
 				for (let i = 0; i < this.cycleList.length; i++) {
 					if (this.cycleList[i].value === evt.target.value) {
+						this.current = i;
+						this.cycleList[i].checked = true
+						break;
+					} else {
+						this.cycleList[i].checked = false
+					}
+				}
+			},
+			giveReceiptValue() {
+				for (let i = 0; i < this.cycleList.length; i++) {
+					if (this.cycleList[i].value-0 === this.form.day) {
 						this.current = i;
 						this.cycleList[i].checked = true
 						break;

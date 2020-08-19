@@ -47,19 +47,21 @@
 		</template>
 		<view :class="showSider ? 'mark in' : 'mark'" @click="showSider=false"></view>
 		<view :class="showSider ? 'sider in' : 'sider'">
-			<view class="text-center fsz28">筛选</view>
+			<view class="text-center">筛选条件</view>
 			<view class="form">
 				<view class="form-item">
 					<view class="form-title">商品名称</view>
-					<input class="form-item-input" type="text" placeholder="名称" v-model="form.name"/>
+					<input class="form-item-input" type="text" placeholder="名称" v-model="condition.goodsName"/>
 				</view>
-				<view class="flex uni-btn-v">
+				
+			</view>
+			<view class="fixed-bottom uni-btn-v">
+				<view class="flex space-between">
 					<button type="default" class="btn-block" @click="reset" size="mini">重置</button>
 					<button type="primary" class="btn-block" @click="search" size="mini">查询</button>
 				</view>
 			</view>
 		</view>
-
 	</view>
 </template>
 
@@ -68,8 +70,8 @@
 		data() {
 			return {
 				showSider: false,
-				form: {
-					name: ''
+				condition: {
+					goodsName: ''
 				},
 				list: [],
 				emptyShow: false, //true显示，false隐藏
@@ -102,6 +104,7 @@
 			this.status = "more"
 			this.flag = false
 			this.num = 0
+			this.condition.goodsName = ''
 			this.getList(this.page_num)
 
 		},
@@ -123,7 +126,8 @@
 			getList(num) {
 				this.status = 'loading';
 				this.$api.goodsList({
-					page: num
+					page: num,
+					condition: this.condition
 				}, res => {
 					this.total_num = res.data.last_page
 					let newData = res.data.data
@@ -268,10 +272,15 @@
 				}
 			},
 			search() {
+				this.list = []
+				this.getList(1);
 				this.showSider = false
 			},
 			reset() {
-				this.form.name = ''
+				this.condition.goodsName = ''
+				this.list = []
+				this.getList(1);
+				this.showSider = false
 			}
 		}
 	}
@@ -322,12 +331,13 @@
 	.mark {
 		transition: all 0.4s ease;
 		left: 100%;
-		top: 44px;
+		top: 0;
 		position: fixed;
 		background: #9c9a9a;
 		width: 100%;
-		height: calc(100% - 44px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom));
-		z-index: 202;
+		// height: calc(100% - 44px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom));
+		height: calc(100vh  - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+		z-index: 999;
 
 		&.in {
 			left: 0;
@@ -339,21 +349,30 @@
 		transition: all 0.4s ease;
 		padding: 20upx;
 		left: 100%;
-		top: 44px;
+		top: 0;
 		position: fixed;
 		background: #fff;
 		width: 70%;
-		height: calc(100% - 44px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom));
-		z-index: 202;
-
+		// height: calc(100% - 44px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom));
+		height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+		z-index: 1000;
+		font-size: $fz18;
 		&.in {
 			left: 30%;
 		}
 	}
+	.form-item {
+		margin-top: 30upx;
+	}
 	.form-item-input {
-		padding: 10upx 20upx;
-		margin-top: 10upx;
+		padding: 20upx 20upx;
+		margin-top: 30upx;
 		border: 2upx solid $eee;
-		font-size: $fz12;
+		font-size: $fz16;
+	}
+	.fixed-bottom {
+		position: fixed;
+		width: 70%;
+		bottom: 30upx;
 	}
 </style>
