@@ -444,6 +444,14 @@ export const fixPwd = (data, callback) => post('commercial/editPassword', data, 
 export const resetPwd = (data, callback) => post('login/forgetPassword', data, callback);
 
 
+// 获取用户协议内容
+export const getAgreement = (data, callback) => post('article/merchantServiceAgreement', data, callback);
+
+
+
+
+
+
 
 
 

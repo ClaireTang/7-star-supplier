@@ -94,9 +94,9 @@
 			</view>
 		</view>
 		<view class="btn-bottom">
-			<view class="fsz24 text-center agreement">
+			<!-- <view class="fsz24 text-center agreement">
 				认证即代表你同意<text @click="goAgreement()" class="color-o">用户协议</text>
-			</view>
+			</view> -->
 			<button type="primary" class="btn-block"  @click="submitAuth" hover-class="btn-hover2" :disabled='submitStatus' :loading='submitStatus'>提交认证</button>
 		</view>
 	</view>
@@ -381,7 +381,11 @@
 						this.cycleList[i].checked = false
 					}
 				}
-			}
+			},
+			// 跳转到用户协议
+			goAgreement() {
+				this.$common.navigateTo('/pages/article/index');
+			},
 		}
 	}
 </script>

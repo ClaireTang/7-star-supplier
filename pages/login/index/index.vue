@@ -10,12 +10,10 @@
 			<view class="goforgetpwd color-9 fsz24" @click="goForgetpwd"> 忘记密码 </view>
 			<view class="bottom">
 				<button :class="loginButtonClass" @click="loginHandler" hover-class="btn-hover">登录</button>
-				<view class="color-9 fsz24 agreement">
+				<!-- <view class="color-9 fsz24 agreement">
 					登录即代表你同意
 					<text @click="goAgreement" class="color-o">用户协议</text>
-					和
-					<text @click="goPrivacy" class="color-o">隐私政策</text>
-				</view>
+				</view> -->
 				<view class="fz12 regist" @click="toReg">注册</view>
 				
 			</view>

@@ -19,8 +19,6 @@
 			<view class="color-9 fsz24 agreement">
 				注册即代表你同意
 				<text @click="goAgreement()" class="color-o">用户协议</text>
-				和
-				<text @click="goPrivacy()" class="color-o">隐私政策</text>
 			</view>
 		</view>
 		<view class="registered-item"><view class="btn btn-g btn-square registered" @click="toLogin">已有账号，立即登录</view></view>
@@ -175,14 +173,8 @@ export default {
 		},
 		// 跳转到用户协议
 		goAgreement() {
-			let articleId = this.$store.state.config.user_agreement_id;
-			this.$common.navigateTo('/pages/article/index?id_type=1&id=' + articleId);
+			this.$common.navigateTo('/pages/article/index');
 		},
-		// 跳转到隐私政策
-		goPrivacy() {
-			let articleId = this.$store.state.config.privacy_policy_id;
-			this.$common.navigateTo('/pages/article/index?id_type=1&id=' + articleId);
-		}
 	}
 };
 </script>
