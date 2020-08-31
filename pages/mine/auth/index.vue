@@ -15,7 +15,11 @@
 			</view>
 			<view class="flex form-item">
 				<view class="form-title">收款账号</view>
-				<input class="form-item-input" type="number" v-model="form.shroff_account_number"/>
+				<input class="form-item-input" type="number" v-model="form.shroff_account_number" @blur="validerBankCard"/>
+			</view>
+			<view class="flex form-item">
+				<view class="form-title">银行名称</view>
+				<input class="form-item-input" type="text" v-model="form.bank_name" disabled/>
 			</view>
 			<view class="flex form-item">
 				<view class="form-title">省市区</view>
@@ -62,6 +66,38 @@
 			</view>
 			<view class="flex space-between align-items-top form-item-other">
 				<view class="form-title">
+					<view>商户身份证(正面照)</view>
+					<view class="text-color-grey fsz24">照片清晰,不超过2M</view>
+				</view>
+				<view class="form-image">
+					<view class="img-item" v-for="(item, key) in id_card_img_p_images" :key="key">
+						<image class="del" src="/static/image/del.png" mode="" @click="delImage(item,id_card_img_p_images)"></image>
+						<image class="" :src="item.url" mode="" @click="clickImg(item.url)"></image>
+					</view>
+					<view class="upload-img" v-show="isImage(id_card_img_p_image_max,id_card_img_p_images)" @click="upImage(id_card_img_p_image_max,id_card_img_p_images)">
+						<image class="icon" src="/static/image/camera.png" mode=""></image>
+						<view class="">正面照</view>
+					</view>
+				</view>
+			</view>
+			<view class="flex space-between align-items-top form-item-other">
+				<view class="form-title">
+					<view>商户身份证(反面照)</view>
+					<view class="text-color-grey fsz24">照片清晰,不超过2M</view>
+				</view>
+				<view class="form-image">
+					<view class="img-item" v-for="(item, key) in id_card_img_n_images" :key="key">
+						<image class="del" src="/static/image/del.png" mode="" @click="delImage(item,id_card_img_n_images)"></image>
+						<image class="" :src="item.url" mode="" @click="clickImg(item.url)"></image>
+					</view>
+					<view class="upload-img" v-show="isImage(id_card_img_n_image_max,id_card_img_n_images)" @click="upImage(id_card_img_n_image_max,id_card_img_n_images)">
+						<image class="icon" src="/static/image/camera.png" mode=""></image>
+						<view class="">反面照</view>
+					</view>
+				</view>
+			</view>
+			<view class="flex space-between align-items-top form-item-other">
+				<view class="form-title">
 					<view>食品经营许可证</view>
 					<view class="text-color-grey fsz24">照片清晰,不超过2M</view>
 				</view>
@@ -93,7 +129,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="btn-bottom">
+		<view>
 			<!-- <view class="fsz24 text-center agreement">
 				认证即代表你同意<text @click="goAgreement()" class="color-o">用户协议</text>
 			</view> -->
@@ -108,6 +144,10 @@
 			return {
 				business_license_images:[],
 				business_license_image_max: 1,
+				id_card_img_p_images: [],
+				id_card_img_p_image_max: 1,
+				id_card_img_n_images: [],
+				id_card_img_n_image_max: 1,
 				food_trade_permit_images:[],
 				food_trade_permit_image_max: 1,
 				logo_images: [],
@@ -118,7 +158,10 @@
 					principal: '',
 					id_card: '',
 					shroff_account_number:'',
+					bank_name: '',
 					business_license: '',
+					id_card_img_p: '',
+					id_card_img_n: '',
 					food_trade_permit: '',
 					logo: '',
 					address: 0,
@@ -179,10 +222,15 @@
 							country: that.$db.get('AreaList')[0],
 						};
 					}
-					console.log(address)
 					this.makeMultiArrayANDIndex(address)
 					if(res.data.business_license) {
 						this.business_license_images.push(res.data.business_license)
+					}
+					if(res.data.id_card_img_p) {
+						this.id_card_img_p_images.push(res.data.id_card_img_p)
+					}
+					if(res.data.id_card_img_n) {
+						this.id_card_img_n_images.push(res.data.id_card_img_n)
 					}
 					if(res.data.food_trade_permit) {
 						this.food_trade_permit_images.push(res.data.food_trade_permit)
@@ -196,14 +244,19 @@
 			})
 		},
 		methods: {
+			validerBankCard() {
+				this.$api.checkBankCard({card_code: this.form.shroff_account_number}, res => {
+					if(res.state === '200') {
+						this.form.bank_name = res.data.name
+					}
+				})
+			},
 			// 获取省市区全部数据和默认id组合
 			async makeMultiArrayANDIndex (address) {
 				this.$set(this.multiArray, 0 , this.$db.get("ProvinceList"))
 				this.$set(this.multiArray, 1 , await this.getList(address.province.id))
 				this.$set(this.multiArray, 2 , await this.getList(address.city.id))
 				this.makeMultiIndex(address)
-				console.log(this.multiArray,'ooooo')
-				console.log(this.multiIndex,'yyyyy')
 				this.isChoose = true
 			},
 			makeMultiIndex(address) {
@@ -320,6 +373,12 @@
 				}else if (!data.business_license) {
 					this.$common.errorToShow('请上传营业执照')
 					return false
+				}else if (!data.id_card_img_p) {
+					this.$common.errorToShow('请上传身份证正面照')
+					return false
+				}else if (!data.id_card_img_n) {
+					this.$common.errorToShow('请上传身份证反面照')
+					return false
 				} else {
 					return true
 				}
@@ -338,22 +397,26 @@
 				this.form.address = this.multiArray[2][this.multiIndex[2]].id
 				// 处理图片类
 				this.form.business_license = this.returnId(this.business_license_images)
+				this.form.id_card_img_p = this.returnId(this.id_card_img_p_images)
+				this.form.id_card_img_n = this.returnId(this.id_card_img_n_images)
 				this.form.food_trade_permit = this.returnId(this.food_trade_permit_images)
 				this.form.logo = this.returnId(this.logo_images)
 				//处理打款周期
 				this.form.day = this.cycleList[this.current].value
 				if(this.checkData(this.form)){
 					this.$api.editBusinessInfo(this.form, res => {
+						if(res.state === '200') {
 							this.$common.successToShow('提交成功', result => {
 								this.submitStatus = false;
 								uni.navigateBack({
 									delta: 2
 								});
 							});
-						},res => {
-							this.submitStatus = false;
 						}
-					);
+							
+					},err => {
+							this.submitStatus = false;
+					});
 				}
 				
 			},
