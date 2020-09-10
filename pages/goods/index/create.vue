@@ -69,54 +69,118 @@
 				</view>
 			</view>
 			<view class="flex space-between form-item">
-				<view>是否开启规格</view>
+				<view>是否开启规格：<span class="text-color-grey fsz24">开启前需选择商品类型</span></view>
 				<switch :disabled="!form.goods_type_id" :checked="switchChecked" style="transform:scale(0.7)" @change="specRelSwitch"/>
 			</view>
 			<template v-if="!switchChecked">
-				<view class="flex form-item">
-					<view class="form-title">商品单位</view>
-					<input class="form-item-input" type="text" placeholder="单位名称" v-model="form.unit"/>
-				</view>
-				<view class="flex form-item">
-					<view class="form-title">商品售价</view>
-					<view class="flex">
-						<text>￥</text>
-						<input class="form-item-input" type="digit" placeholder="0" v-model="form.costprice"/>
+				<uni-card title="未开启规格时"  extra="">
+					<view class="flex form-item">
+						<view class="form-title">商品单位</view>
+						<input class="form-item-input" type="text" placeholder="单位名称" v-model="form.unit"/>
 					</view>
-				</view>
+					<view class="flex form-item">
+						<view class="form-title">商品销售价</view>
+						<view class="flex">
+							<text>￥</text>
+							<input class="form-item-input" type="digit" placeholder="只填数字" v-model="form.price"/>
+						</view>
+					</view>
+					<view class="flex form-item">
+						<view class="form-title">商品成本价</view>
+						<view class="flex">
+							<text>￥</text>
+							<input class="form-item-input" type="digit" placeholder="非必填,只填数字" v-model="form.costprice"/>
+						</view>
+					</view>
+					<view class="flex form-item">
+						<view class="form-title">商品市场价</view>
+						<view class="flex">
+							<text>￥</text>
+							<input class="form-item-input" type="digit" placeholder="非必填,只填数字" v-model="form.mktprice"/>
+						</view>
+					</view>
+					<view class="flex form-item no-border">
+						<view class="form-title">修改库存</view>
+						<input class="form-item-input" type="text" placeholder="正数时添加库存，负数时减少库存" v-model="form.fixStock"/>
+					</view>
+					<view class="text-right">
+						还剩库存:{{form.stock}}, 冻结库存: {{form.freeze_stock}}
+					</view>
+				</uni-card>
 			</template>
 			<template v-else>
-				<view class="flex" v-for="(item1, s) in specRel" :key="item1.id">
-					<text>{{item1.name}}</text>
-					<helang-checkbox class="self" ref="checkbox" @change="valueChange"></helang-checkbox>
-				</view>
-				<view class="text-center">
-					<button type="primary" size="mini" @click="makeSpecRel">生成规格</button>
-				</view>
-				<template v-if="form.product.length > 0">
-					<view class="flex contBox" v-for="(obj, i) in form.product" :key="i">
-						<view>
-							<view class="img-item" v-for="(item, k) in obj.images" :key="k" v-if="obj.images.length>0">
-								<image class="del" src="/static/image/del.png" mode="" @click="delImage(item,obj.images)"></image>
-								<image class="" :src="item.url" mode="" @click="clickImg(item.url)"></image>
-							</view>
-							<view class="upload-img" v-show="isImage(1,obj.images)" @click="upImage(1,obj.images)">
-								<image class="icon" src="/static/image/camera.png" mode=""></image>
-								<view class="">上传照片</view>
-							</view>
-						</view>
-						<view class="midBox">
-							<view>{{obj.spes_desc}}</view>
-							<view class="flex">
-								<text>售价：￥</text>
-								<input class="price" type="text" v-model="obj.costprice" />
-							</view>
-						</view>
-						<uni-icons type="checkbox" :color="obj.is_defalut == 1?'#007aff':'#8f8f94'" size="25" @click="changeDefault(form.product,i)"/>
-						<uni-icons type="trash" color="#8f8f94" size="25" @click="delSpecRel(i,form.product)"/>
-					</view>
-				</template>
+				<uni-card title="开启规格时"  extra="">
+				    <view class="flex" v-for="(item1, s) in specRel" :key="item1.id">
+				    	<text>{{item1.name}}</text>
+				    	<helang-checkbox class="self" ref="checkbox" @change="valueChange"></helang-checkbox>
+				    </view>
+				    <view class="text-center">
+				    	<button type="primary" size="mini" @click="makeSpecRel">生成规格</button>
+				    </view>
+				    <template v-if="form.product.length > 0">
+				    	<view class="flex contBox" v-for="(obj, i) in form.product" :key="i">
+				    		<view>
+								<view>
+									<view class="img-item" v-for="(item, k) in obj.images" :key="k" v-if="obj.images.length>0">
+										<image class="del" src="/static/image/del.png" mode="" @click="delImage(item,obj.images)"></image>
+										<image class="" :src="item.url" mode="" @click="clickImg(item.url)"></image>
+									</view>
+									<view class="upload-img" v-show="isImage(1,obj.images)" @click="upImage(1,obj.images)">
+										<image class="icon" src="/static/image/camera.png" mode=""></image>
+										<view class="">上传照片</view>
+									</view>
+								</view>
+								<view class="flex space-around">
+									<uni-icons type="checkbox" :color="obj.is_defalut == 1?'#007aff':'#8f8f94'" size="25" @click="changeDefault(form.product,i)"/>
+									<uni-icons type="trash" color="#8f8f94" size="25" @click="delSpecRel(i,form.product)"/>
+								</view>
+				    			
+				    		</view>
+				    		<view class="midBox">
+				    			<view class="m-b-10 text-center">{{obj.spes_desc}}</view>
+								<view class="flex space-between m-b-10">
+									<view class="flex">
+										<text class="fsz24">销售价:￥</text>
+										<input class="price" type="text" v-model="obj.price" />
+									</view>
+									<view class="flex">
+										<text class="fsz24">成本价:￥</text>
+										<input class="price" type="text" v-model="obj.costprice" />
+									</view>
+								</view>
+				    			<view class="flex space-between m-b-10">
+									<view class="flex">
+										<text class="fsz24">市场价:￥</text>
+										<input class="price" type="text" v-model="obj.mktprice" />
+									</view>
+									<view class="flex">
+										<text class="fsz24">修改库存:</text>
+										<input class="price" type="text" v-model="obj.fixStock" />
+									</view>
+								</view>
+								<view class="fsz24 text-right">
+									还剩库存:{{obj.stock}}，冻结库存: {{obj.freeze_stock}}
+								</view>
+				    		</view>
+				    	</view>
+				    </template>
+				</uni-card>
 			</template>
+			<template v-if="userGrade.length > 0">
+				<uni-card title="商品优惠"  extra="填入优惠差价">
+				    <view :class="u === userGrade.length - 1 ? 'flex form-item no-border' : 'flex form-item' " v-for="(priceItem,u) in userGrade" :key="u">
+				    	<view class="form-title">{{priceItem.name}}</view>
+				    	<view class="flex">
+				    		<text>￥</text>
+				    		<input class="form-item-input" type="digit" placeholder="" v-model="form.goods_grade[priceItem.id]"/>
+				    	</view>
+				    </view>
+				</uni-card>
+			</template>
+			<view class="flex space-between form-item no-border">
+				<view>是否上架：</view>
+				<switch :checked="isUp" style="transform:scale(0.7)" @change="isUp=!isUp"/>
+			</view>
 			<button type="primary" class="btn-block" @click="create">提交</button>
 		</view>
 	</view>
@@ -138,10 +202,16 @@
 					images:[],
 					// image_id: '',
 					unit: '',
-					price: '',
+					costprice: '',		//成本价
+					price: '',			//销售价
+					mktprice: '',		//市场价
+					fixStock: '',		//修改库存；为正数时，添加库存，负数时减少库存
+					stock: 0,			//库存还有数量
+					freeze_stock: 0,	//冻结库存数量
 					marketable: 2,
 					spes_desc: {},
-					product: []
+					product: [],
+					goods_grade: {}		//优惠价格集合
 				},
 				
 				linkageVisibleCate: false,
@@ -163,8 +233,12 @@
 				},
 				type_result:{result: "",value:"",obj:{}},
 				switchChecked: false,
+				
 				specRel: [],
 				spesDescList: [],
+				
+				userGrade: [],
+				isUp: false				//是否上架
 			}
 		},
 		computed: {
@@ -197,6 +271,7 @@
 			async getData(option) {
 				this.cateList = await this.getCateList()
 				this.typeList = await this.getTypeList()
+				this.userGrade = await this.getUserGrade()
 				
 				if(option.goods_id) {
 					this.title = '修改'
@@ -209,9 +284,14 @@
 					this.form.goods_type_id = detailData.goods_type_id
 					this.form.unit = detailData.unit
 					this.form.costprice = detailData.costprice
+					this.form.price = detailData.price
+					this.form.mktprice = detailData.mktprice
 					this.form.marketable = detailData.marketable
 					this.form.spes_desc = detailData.spes_desc
 					this.form.product = detailData.product
+					this.form.goods_grade = detailData.goods_grade
+					this.form.stock = detailData.stock
+					this.form.freeze_stock = detailData.freeze_stock
 					//产品分类
 					this.makeCateArr(detailData.category)
 					this.cate_result = {
@@ -234,7 +314,7 @@
 						this.$set(this.form,'images',[] )
 					}
 					//产品规格
-					if(detailData.product.length > 0) {
+					if(this.form.spes_desc) {
 						this.switchChecked = true
 						this.specRel = await this.getSpecRelData();
 						let finalArr = this.flatSpecIdArr(detailData.spes_desc)
@@ -258,6 +338,7 @@
 							})
 						})
 						detailData.product.forEach((item,key) => {
+							this.$set(this.form.product[key],'fixStock','')
 							if(!item.images) {
 								// item.images = []
 								this.$set(this.form.product[key],'images',[])
@@ -266,10 +347,14 @@
 								this.$set(this.form.product[key],'images',[item.images])
 							}
 						})
-						console.log(this.form.product,'product')
 					}
-				
+					// 上架状态
+					this.isUp = this.form.marketable === 1 ?  true : false
+					
 				}else{
+					this.userGrade.map((val,key) => {
+						this.$set(this.form.goods_grade,val.id,'')
+					})
 					this.title = '新增'
 				}
 			},
@@ -318,6 +403,17 @@
 					});
 				})
 			},
+			getUserGrade() {
+				return new Promise((resolve, reject) => {
+					this.$api.getUserGrade({}, res => {
+						if (res.state) {
+							resolve(res.data)
+						} else {
+							reject(res.data)
+						}
+					});
+				})
+			},
 			bindTextAreaBlur: function (e) {
 				console.log(e.detail.value)
 			},
@@ -354,7 +450,6 @@
 					}
 				}
 			},
-			
 			// 图片点击放大
 			clickImg (img) {
 				// 预览图片
@@ -431,7 +526,7 @@
 						price:"",
 						costprice:"",
 						mktprice:"",
-						marketable:"2",
+						fixStock: "",
 						stock:"0",
 						freeze_stock:"0",
 						images: [],
@@ -447,9 +542,9 @@
 				arr[key].is_defalut = "1"
 				arr.map((item,j) => {
 					if(j == key) {
-						return arr[j].is_defalut = "1"
+						return arr[j].is_defalut = "1"    //1未默认2非默认
 					}else{
-						return arr[j].is_defalut = "0"
+						return arr[j].is_defalut = "2"
 					}
 				})
 			},
@@ -479,12 +574,24 @@
 						// 将未开启时的单位和价格取消
 						this.form.unit = ''
 						this.form.costprice = ''
+						this.form.price = ''
+						this.form.mktprice = ''
+						this.form.stock = ''
 					}else{
 						this.form.spes_desc = {}
 						this.form.product = []
 						this.specRel = []
 						this.spesDescList = []
 					}
+					//是否上架
+					this.isUp ? this.form.marketable = 1 : this.form.marketable = 2
+					//处理优惠等级
+					let goods_grade_keys = Object.keys(this.form.goods_grade)
+					this.userGrade.map((val,key) => {
+						if(goods_grade_keys.indexOf(String(val.id)) === -1) {
+							this.form.goods_grade[val.id] = 0
+						}
+					})
 					console.log(this.form,'this.form')
 					this.$api.goodsInsert(this.form, res => {
 							this.$common.successToShow('提交成功', result => {
@@ -498,6 +605,9 @@
 						},res => {}
 					);
 				}
+			},
+			isInteger(obj) {
+				return obj !== null && obj !== undefined && obj !== NaN && obj%1 === 0
 			},
 			checkData(data) {
 				if (!data.name) {
@@ -516,17 +626,31 @@
 					this.$common.errorToShow('请上传商品图片')
 					return false
 				}
+				if(!this.switchChecked && !this.isInteger(data.fixStock)) {
+					this.$common.errorToShow('修改库存值不正确，应为整数')
+					return false
+				}
 				if(this.switchChecked) {
 					if(data.product.length == 0) {
 						this.$common.errorToShow('请生成规格')
 						return false
 					}
+					let c = true
+					for(let i = 0; i < data.product.length; i++) {
+						if(!this.isInteger(data.product[i].fixStock)) {
+							c = false
+							this.$common.errorToShow(`第${i+1}行规格商品，修改库存值不正确，应为整数`)
+							break
+						}
+					}
+					return c
 				}else {
 					if(!data.unit) {
 						this.$common.errorToShow('请输入商品单位')
 						return false
-					}else if(!data.costprice) {
-						this.$common.errorToShow('请输入商品价格')
+					}
+					if(!data.price) {
+						this.$common.errorToShow('请输入商品销售价')
 						return false
 					}
 				}
@@ -543,7 +667,7 @@
 <style lang="scss" scoped>
 	@import '~@/static/css/common.scss';
 	.create{
-		padding: 20upx;
+		padding: 40upx 20upx;
 		height: 100%;
 	}
 	.form-item {
@@ -631,7 +755,7 @@
 	}
 	.contBox {
 		width: 100%;
-		padding: 0 10upx 0 0;
+		padding: 10upx 10upx 10upx 0;
 		border-radius: 16upx;
 		border: 1upx solid $eee;
 		margin: 20upx 0;
@@ -650,5 +774,16 @@
 		width: 100upx;
 		border: 1px solid $eee;
 		padding: 8upx 10upx;
+	}
+	.uni-card {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	/deep/ .uni-card__header-title-text {
+		font-size: inherit;
+	}
+	
+	.no-border {
+		border: none;
 	}
 </style>

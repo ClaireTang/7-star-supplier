@@ -20,7 +20,8 @@ const urlList = [
 	'orders/turnDown',
 	'orders/openTax',
 	'commercial/editMobile',
-	'commercial/editPassword'
+	'commercial/editPassword',
+	'user/userGrade'
 ];
 
 const post = (url, data, callback,complete) => {
@@ -446,6 +447,12 @@ export const resetPwd = (data, callback) => post('login/forgetPassword', data, c
 
 // 获取用户协议内容
 export const getAgreement = (data, callback) => post('article/merchantServiceAgreement', data, callback);
+
+// 获取优惠等级
+export const getUserGrade = (data, callback) => post('user/userGrade', data, callback);
+
+
+
 
 
 
