@@ -2,8 +2,8 @@
     "name" : "七星优购商家版",
     "appid" : "__UNI__8341B70",
     "description" : "",
-    "versionName" : "1.0.2",
-    "versionCode" : 102,
+    "versionName" : "1.0.5",
+    "versionCode" : 105,
     "transformPx" : false,
     "app-plus" : {
         "nvueCompiler" : "uni-app",

@@ -14,8 +14,9 @@
 			<swiper-item class="tab-content" v-for="(tabItem,tabIndex) in navList" :key="tabIndex">
 				<xw-empty :isShow="tabItem.loaded === true && tabItem.orderList.length === 0" text="暂无相关订单数据" textColor="#777777"></xw-empty>
 				<scroll-view class="list-scroll-content" scroll-y @scrolltolower="scrolltolower">
-					<view class="every" v-for="(obj,key) in tabItem.orderList" :key="key">
+					<view class="every" v-for="(obj,key) in tabItem.orderList" :key="obj.order_id">
 						<view class="flex space-between top">
+							{{key+1}}
 							<text>订单编号：{{obj.order_id}}</text>
 							<button class="mini-btn" type="primary" plain="true" size="mini" @click="copy(obj.order_id)">复制</button>
 						</view>
@@ -79,18 +80,6 @@
 						loadingType: 'noMore',
 						orderList: []
 					},
-					/* {
-						state: 2,
-						text: '未付款',
-						loadingType: 'noMore',
-						orderList: []
-					},
-					{
-						state: 3,
-						text: '已收款',
-						loadingType: 'more',
-						orderList: []
-					}, */
 					{
 						state: 2,
 						text: '全部',
@@ -106,30 +95,40 @@
 				cause : ''
 			}
 		},
-		onLoad(options){
-			// 待发货
-			this.refreshData(false)
+		onLoad(options){			
+			// // 待发货
+			// let params = {ship_status: 1}
+			// this.loadData('', params)
 		},
 		onShow() {
-		},
-		onPullDownRefresh() {
-			this.refreshData(true)
+			// if(uni.getStorageSync("to")) {
+			// 	uni.removeStorage({
+			// 	    key: 'to',
+			// 	    success: function (res2) {
+			// 	        console.log('success');
+			// 	    }
+			// 	});
+			// 	let params = {ship_status: 1}
+			// 	this.loadData('', params)
+			// }
+			this.resetState()
+			this.depend()
 		},
 		methods: {
-			//获取订单列表
-			loadData(source,params,isRefresh){
+			//获取订单列表,,,全部订单会分页加载，其他状态订单一次性加载完
+			loadData(source,params){
 				//这里是将订单挂载到tab列表下
 				let index = this.tabCurrentIndex;
 				let navItem = this.navList[index];
-				let state = navItem.state;
-				if(source === 'tabChange' && navItem.loaded === true){
-					//tab切换只有第一次需要加载数据
-					return false;
-				}
+				console.log(navItem.orderList)
+				// if(source === 'tabChange' && navItem.loaded === true){
+				// 	//tab切换只有第一次需要加载数据
+				// 	return false;
+				// }
 				if(index === 2) {
 					if(navItem.loadingType === 'loading'){
 						//防止重复加载
-						return;
+						return false;
 					}
 					navItem.loadingType = 'loading';
 				}
@@ -148,44 +147,21 @@
 					}
 					//loaded新字段用于表示数据加载完毕，如果为空可以显示空白页
 					this.$set(navItem, 'loaded', true);
-					isRefresh && uni.stopPullDownRefresh();
 				})
 			}, 
 			//顶部tab点击
 			tabClick(index){
 				this.tabCurrentIndex = index;
+				this.resetState()
 			},
 			//swiper 切换
 			changeTab(e){
 				this.tabCurrentIndex = e.target.current;
-				let params = {}
-				switch (this.tabCurrentIndex) {
-					case 0:
-						params = {ship_status: 1}
-						this.loadData('tabChange',params)
-						break;
-					case 1:
-						params = {ship_status: 3,confirm: 1,}
-						this.loadData('tabChange',params)
-						break;
-					case 2:
-						params = Object.assign({},{page: this.page})
-						this.loadData('tabChange',params)
-						break;
-					default:
-						break;
-				}
+				this.resetState()
+				this.depend()
 			},
-			//刷新当前页面
-			refreshData(isRefresh) {
-				this.$common.successToShow('刷新页面成功！')
-				//tab为全部时，重置页码和数据列表；
-				if(this.tabCurrentIndex === 2) {
-					this.page = 1
-					this.$set(this.navList[this.tabCurrentIndex],'orderList',[])
-					this.$set(this.navList[this.tabCurrentIndex],'loadingType','more')
-				}
-				//根据tabCurrentIndex确定传参
+			//根据tabCurrentIndex确定传参
+			depend() {
 				let params = {}
 				switch (this.tabCurrentIndex) {
 					case 0:
@@ -200,7 +176,15 @@
 					default:
 						break;
 				}
-				this.loadData('',params,isRefresh)
+				this.loadData('',params)
+			},
+			//切换到全部时，重置页码和数据列表
+			resetState() {
+				if(this.tabCurrentIndex === 2) {
+					this.page = 1
+					this.$set(this.navList[this.tabCurrentIndex],'orderList',[])
+					this.$set(this.navList[this.tabCurrentIndex],'loadingType','more')
+				}
 			},
 			//滚动到底
 			scrolltolower() {
@@ -259,6 +243,10 @@
 			},
 			//跳转详情页
 			goDetail(obj) {
+				// uni.setStorage({
+				// 	key: 'to',
+				// 	data: 'detail',
+				// })
 				uni.navigateTo({
 					url: '/pages/order/detail/detail?order_id=' + obj.order_id
 				})
@@ -285,7 +273,8 @@
 			//调用发货接口
 			useDeliverApi(data) {
 				this.$api.shipments(data, res => {
-					this.refreshData(false)
+					let params = {ship_status: 1}
+					this.loadData('',params)
 				})
 			},
 			//驳回
@@ -311,7 +300,8 @@
 			//调用驳回接口
 			useTurnDownApi(data) {
 				this.$api.turnDown(data, res => {
-					this.refreshData(false)
+					let params = {ship_status: 1}
+					this.loadData('',params)
 				})
 			},
 			//格式化支付状态

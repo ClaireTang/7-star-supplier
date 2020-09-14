@@ -3,13 +3,15 @@
 		{
 			"path": "pages/order/index/index",
 			"style": {
-				"navigationBarTitleText": "订单"
+				"navigationBarTitleText": "订单",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/order/receipt/index",
 			"style": {
-				"navigationBarTitleText": "收款单" 
+				"navigationBarTitleText": "收款单" ,
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -100,6 +102,10 @@
 				"navigationBarTitleText":"文章详情"
 			}
 		}
+        ,{
+            "path" : "pages/order/index/index-refresh",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

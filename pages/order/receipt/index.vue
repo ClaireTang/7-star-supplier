@@ -10,7 +10,6 @@
 				{{item.text}}
 			</view>
 		</view>
-		<!-- tabItem.loaded === true && tabItem.orderList.length === 0 -->
 		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">   
 			<swiper-item class="tab-content" v-for="(tabItem,tabIndex) in navList" :key="tabIndex">
 				<xw-empty :isShow="tabItem.loaded === true && tabItem.orderList.length === 0" text="暂无相关订单数据" textColor="#777777"></xw-empty>
@@ -80,38 +79,16 @@
 			}
 		},
 		onLoad(options){
-			// 待付款
-			let params = {pay_status: 1,page:this.wait_page}
-			this.loadData('', params)
-			/**
-			 * 修复app端点击除全部订单外的按钮进入时不加载数据的问题
-			 * 替换onLoad下代码即可
-			 */
-			// // #ifndef MP
-			// this.loadData('', params)
-			// // #endif
-			// // #ifdef MP
-			// console.log(options,'oooooo')
-			// if(options.state == 0){
-			// 	this.loadData('', params)
-			// }
-			// // #endif
+			this.refreshData(false)
 		},
 		onShow() {
-			if(uni.getStorageSync("to")) {
-				uni.removeStorage({
-				    key: 'to',
-				    success: function (res2) {
-				        console.log('success');
-				    }
-				});
-				let params = {pay_status: 1,page:this.wait_page}
-				this.loadData('', params)
-			}
+		},
+		onPullDownRefresh() {
+			this.refreshData(true)
 		},
 		methods: {
 			//获取订单列表
-			loadData(source,params,type){
+			loadData(source,params,isRefresh){
 				//这里是将订单挂载到tab列表下
 				let index = this.tabCurrentIndex;
 				let navItem = this.navList[index];
@@ -122,7 +99,7 @@
 				}
 				if(navItem.loadingType === 'loading'){
 					//防止重复加载
-					return;
+					return false;
 				}
 				navItem.loadingType = 'loading';
 				
@@ -144,11 +121,8 @@
 					}
 					//loaded新字段用于表示数据加载完毕，如果为空可以显示空白页
 					this.$set(navItem, 'loaded', true);
-					
-					// if(navItem.loaded === true && navItem.orderList.length === 0 ) {
-					// 	this.$set(navItem, 'isShow', true);
-					// }
-					// console.log(navItem,'navItem')
+					//下拉刷新时要执行
+					isRefresh && uni.stopPullDownRefresh();
 				})
 			}, 
 			//顶部tab点击
@@ -175,6 +149,31 @@
 					default:
 						break;
 				}
+			},
+			//刷新当前页面
+			refreshData(isRefresh) {
+				this.$common.successToShow('刷新页面成功！')
+				//tab为全部时，重置页码和数据列表；
+				if(this.tabCurrentIndex === 0) {
+					this.wait_page = 1
+				}else if(this.tabCurrentIndex === 1) {
+					this.has_page = 1
+				}
+				this.$set(this.navList[this.tabCurrentIndex],'orderList',[])
+				this.$set(this.navList[this.tabCurrentIndex],'loadingType','more')
+				//根据tabCurrentIndex确定传参
+				let params = {}
+				switch (this.tabCurrentIndex) {
+					case 0:
+						params = {pay_status: 1,page:this.wait_page}
+						break;
+					case 1:
+						params = {pay_status: 2,page:this.has_page}
+						break;
+					default:
+						break;
+				}
+				this.loadData('',params,isRefresh)
 			},
 			//滚动到底
 			scrolltolower() {
@@ -206,14 +205,9 @@
 			},
 			//跳转详情页
 			goDetail(obj) {
-				uni.setStorage({
-					key: 'to',
-					data: 'detail',
-				})
 				uni.navigateTo({
 					url: '/pages/order/detail/detail?order_id=' + obj.order_id
 				})
-				
 			},
 			//格式化支付状态
 			formatPayStatus(value) {
