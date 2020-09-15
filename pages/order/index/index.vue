@@ -107,7 +107,6 @@
 			}
 		},
 		onLoad(options){
-			// 待发货
 			this.refreshData(false)
 		},
 		onShow() {
